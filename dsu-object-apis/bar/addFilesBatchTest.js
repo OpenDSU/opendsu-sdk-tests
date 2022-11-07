@@ -89,5 +89,5 @@ double_check.createTestFolder("bar_test_folder", (err, testFolder) => {
     filePath = path.join(testFolder, "test.txt");
     assert.callback("Add files (embedded: true) to bar test", (callback) => {
         $$.flows.start("AddFilesBatch", "start", callback);
-    }, 3000);
+    }, 3000000);
 });

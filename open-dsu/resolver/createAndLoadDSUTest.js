@@ -13,7 +13,7 @@ assert.callback("Create and load DSU test", (callback) => {
             const openDSU = require("opendsu");
             const resolver = openDSU.loadApi("resolver");
             const keyssi = openDSU.loadApi("keyssi");
-            const seedSSI = keyssi.createTemplateSeedSSI("default", undefined, undefined, "v0", "hint");
+            const seedSSI = keyssi.createTemplateSeedSSI("default", undefined, undefined, "v0");
 
             resolver.createDSU(seedSSI, (err, rawDossier) => {
                 if (err) {
