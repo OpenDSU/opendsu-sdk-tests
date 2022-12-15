@@ -16,7 +16,9 @@ function getBrickStorageFolder(folder) {
 
 function getBrickFilePath(folder, hashLink) {
     let brickFolderName = hashLink.slice(0, 5);
-    return path.join(getBrickStorageFolder(folder), brickFolderName, hashLink);
+    let targetPath = path.join(getBrickStorageFolder(folder), brickFolderName, hashLink);
+    console.log(targetPath);
+    return targetPath;
 }
 
 function createDSU(enclave, callback){
@@ -50,6 +52,7 @@ assert.callback("Create and load Const DSU test", (finishTest) => {
             const EnclaveAPI = openDSU.loadApi("enclave");
             const keySSIApi = openDSU.loadApi("keyssi");
             const anchoring = openDSU.loadApi("anchoring");
+            const resolver = openDSU.loadApi("resolver");
             const sc = openDSU.loadApi("sc");
             const anchoringX = anchoring.getAnchoringX();
 
@@ -84,6 +87,8 @@ assert.callback("Create and load Const DSU test", (finishTest) => {
 
                                         for (let i = 0; i < allVersions.length; i++) {
                                             let brickFilePath = getBrickFilePath(folder, allVersions[i].getHash());
+                                            let fileContent = fs.readFileSync(brickFilePath);
+                                            console.log(fileContent.toString());
                                             fs.unlinkSync(brickFilePath);
                                         }
 
@@ -121,7 +126,30 @@ assert.callback("Create and load Const DSU test", (finishTest) => {
                                                     assert.true(files.indexOf(expectedFiles[i]) !== -1, "Recovery failed");
                                                 }
 
-                                                finishTest();
+                                                resolver.invalidateDSUCache(arraySSI, (err)=>{
+                                                    if(err){
+                                                        throw err;
+                                                    }
+                                                    resolver.loadDSU(arraySSI, {skipCache: true}, (err, newRef)=>{
+                                                        if(err){
+                                                            throw err;
+                                                        }
+
+                                                        newRef.listFiles("/", (err, files)=>{
+                                                            if(err){
+                                                                throw err;
+                                                            }
+
+                                                            for (let i = 0; i < expectedFiles.length; i++) {
+                                                                assert.true(files.indexOf(expectedFiles[i]) !== -1, "Recovery failed");
+                                                            }
+                                                            finishTest();
+                                                        });
+                                                    });
+
+                                                });
+
+
                                             });
                                         });
                                     });
