@@ -57,7 +57,7 @@ assert.callback("Create and load Const DSU test", (finishTest) => {
             const anchoringX = anchoring.getAnchoringX();
 
             sc.getMainEnclave((err, enclave) => {
-                keySSIApi.we_createArraySSI(undefined, "default", ["one", "two", "keys"], undefined, undefined, (err, arraySSI) => {
+                keySSIApi.we_createArraySSI(undefined, "default", ["one", "two", "keys"], undefined, {avoidRandom: true}, (err, arraySSI) => {
                     if (err) {
                         throw err;
                     }
