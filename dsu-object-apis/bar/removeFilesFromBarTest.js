@@ -59,15 +59,15 @@ $$.flows.describe("RemoveFilesFromBar", {
                     if (err) {
                         throw err;
                     }
-                });
 
-                this.listFiles((err, filesAfterRemoval) => {
-                    if (err) {
-                        throw err;
-                    }
+                    this.listFiles((err, filesAfterRemoval) => {
+                        if (err) {
+                            throw err;
+                        }
 
-                    assert.arraysMatch(initialFiles.slice(1), filesAfterRemoval);
-                    this.callback();
+                        assert.arraysMatch(initialFiles.slice(1), filesAfterRemoval);
+                        this.callback();
+                    });
                 });
             });
         });
