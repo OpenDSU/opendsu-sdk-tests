@@ -36,7 +36,7 @@ assert.callback("Create and load DSU test", (callback) => {
                             }
 
 
-                            loadedDSU.getKeySSIAsString((err, cloneKeySSI) => {
+                            loadedDSU.getKeySSIAsString("sread", (err, cloneKeySSI) => {
                                 if (err) {
                                     throw err;
                                 }

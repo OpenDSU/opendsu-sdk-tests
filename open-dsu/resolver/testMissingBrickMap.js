@@ -72,7 +72,7 @@ assert.callback("Test what happens when a brickmap is missing", (finishTest) => 
                                                 fs.unlinkSync(brickFilePath);
                                             }
 
-                                            enclave.loadDSU(seed, (err, dsu)=>{
+                                            enclave.loadDSU(seed, {skipCache: true}, (err, dsu)=>{
                                                 console.log(err, dsu);
 
                                                 assert.equal(!!err, true);
