@@ -8,7 +8,7 @@ require("../../../psknode/bundles/testsRuntime");
 const tir = require("../../../psknode/tests/util/tir");
 const double_check = require("double-check");
 const assert = double_check.assert;
-
+const constants = require("opendsu").constants;
 
 function getBrickStorageFolder(folder) {
     return path.join(folder, "external-volume/domains/default/brick-storage");
@@ -27,7 +27,7 @@ function createDSU(enclave, callback){
             throw err;
         }
 
-        enclave.createDSU(templateSeed, (err, dsu) => {
+        enclave.createDSU(templateSeed, {dsuType: constants.DSUTypes.BAR}, (err, dsu) => {
             if (err) {
                 throw err;
             }
@@ -61,7 +61,7 @@ assert.callback("Create and load Const DSU test", (finishTest) => {
                     if (err) {
                         throw err;
                     }
-                    enclave.createDSU(arraySSI, {useSSIAsIdentifier: true}, (err, constDSU) => {
+                    enclave.createDSU(arraySSI, {useSSIAsIdentifier: true, dsuType: constants.DSUTypes.BAR}, (err, constDSU) => {
                         if (err) {
                             throw err;
                         }
@@ -106,7 +106,7 @@ assert.callback("Create and load Const DSU test", (finishTest) => {
                                             });
                                         };
 
-                                        enclave.loadDSURecoveryMode(arraySSI, recoveryContentFnc, (err, recoveredDSU) => {
+                                        enclave.loadDSURecoveryMode(arraySSI, {contentRecoveryFnc:recoveryContentFnc, dsuType: constants.DSUTypes.BAR}, (err, recoveredDSU) => {
                                             if (err) {
                                                 throw err;
                                             }
@@ -130,7 +130,7 @@ assert.callback("Create and load Const DSU test", (finishTest) => {
                                                     if(err){
                                                         throw err;
                                                     }
-                                                    resolver.loadDSU(arraySSI, {skipCache: true}, (err, newRef)=>{
+                                                    resolver.loadDSU(arraySSI, {skipCache: true, dsuType: constants.DSUTypes.BAR}, (err, newRef)=>{
                                                         if(err){
                                                             throw err;
                                                         }

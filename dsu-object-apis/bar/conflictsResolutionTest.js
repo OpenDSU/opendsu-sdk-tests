@@ -14,6 +14,7 @@ double_check.createTestFolder("conflictsresolution_test_folder", (err, testFolde
 
     assert.callback("ConflictsResolutionTest", (callback) => {
         const openDSU = require("opendsu");
+        const constants = openDSU.constants;
         const resolver = openDSU.loadApi("resolver");
         const keySSISpace = openDSU.loadApi("keyssi");
 
@@ -33,9 +34,9 @@ double_check.createTestFolder("conflictsresolution_test_folder", (err, testFolde
             assert.true(err === null || typeof err === "undefined", "Failed to create server");
 
             // Create DSUs
-            mainDSU = await createDSU(keySSISpace.createTemplateSeedSSI('default'));
-            secondaryDSU = await createDSU(keySSISpace.createTemplateSeedSSI('default'));
-            thirdDSU = await createDSU(keySSISpace.createTemplateSeedSSI('default'));
+            mainDSU = await createDSU(keySSISpace.createTemplateSeedSSI('default'), {dsuType: constants.DSUTypes.BAR});
+            secondaryDSU = await createDSU(keySSISpace.createTemplateSeedSSI('default'), {dsuType: constants.DSUTypes.BAR});
+            thirdDSU = await createDSU(keySSISpace.createTemplateSeedSSI('default'), {dsuType: constants.DSUTypes.BAR});
 
             promisifyDSU(mainDSU, secondaryDSU, thirdDSU);
 
@@ -510,7 +511,7 @@ double_check.createTestFolder("conflictsresolution_test_folder", (err, testFolde
 
             // Reload DSU
             await $$.promisify(resolver.invalidateDSUCache)(mainDSUKeySSI);
-            const dsu = await loadDSU(mainDSUKeySSI);
+            const dsu = await loadDSU(mainDSUKeySSI, {dsuType: constants.DSUTypes.BAR});
             promisifyDSU(dsu);
             const files = await dsu.listFiles('/');
 
@@ -581,7 +582,7 @@ double_check.createTestFolder("conflictsresolution_test_folder", (err, testFolde
 
             // Reload DSU
             await $$.promisify(resolver.invalidateDSUCache)(mainDSUKeySSI);
-            const dsu = await loadDSU(mainDSUKeySSI);
+            const dsu = await loadDSU(mainDSUKeySSI, {dsuType: constants.DSUTypes.BAR});
             promisifyDSU(dsu);
             const files = await dsu.listFiles('/');
 
@@ -740,7 +741,7 @@ double_check.createTestFolder("conflictsresolution_test_folder", (err, testFolde
 
             const result = [];
             for (let i = 0; i < usersNo; i++) {
-                const dsu = await loadDSU(keySSI);
+                const dsu = await loadDSU(keySSI, {dsuType: constants.DSUTypes.BAR});
                 await $$.promisify(resolver.invalidateDSUCache)(keySSI);
                 await $$.promisify(resolver.invalidateDSUCache)(secondaryDSUKeySSI);
                 await $$.promisify(resolver.invalidateDSUCache)(thirdDSUKeySSI);
