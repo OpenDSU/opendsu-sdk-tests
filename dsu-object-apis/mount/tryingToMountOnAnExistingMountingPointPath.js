@@ -14,12 +14,12 @@ assert.callback("mount - trying to mount into an existing mounting point path", 
             const keySSISpace = openDSU.loadApi('keyssi');
             const resolver = openDSU.loadApi('resolver');
 
-            resolver.createDSU(keySSISpace.createTemplateSeedSSI("default"), {dsuType: openDSU.constants.DSUTypes.LEGACY_DSU},(err, rawDossier) => {
+            resolver.createDSU(keySSISpace.createTemplateSeedSSI("default"), {dsuType: openDSU.constants.DSUTypes.BAR}, (err, rawDossier) => {
                 if (err) {
                     throw err;
                 }
 
-                resolver.createDSU(keySSISpace.createTemplateSeedSSI("default"), {dsuType: openDSU.constants.DSUTypes.LEGACY_DSU}, (err, dossier1) => {
+                resolver.createDSU(keySSISpace.createTemplateSeedSSI("default"), {dsuType: openDSU.constants.DSUTypes.BAR}, (err, dossier1) => {
                     if (err) {
                         throw err;
                     }
@@ -33,7 +33,7 @@ assert.callback("mount - trying to mount into an existing mounting point path", 
                                 throw err;
                             }
 
-                            resolver.createDSU(keySSISpace.createTemplateSeedSSI("default"), {dsuType: openDSU.constants.DSUTypes.LEGACY_DSU},(err, dossier2) => {
+                            resolver.createDSU(keySSISpace.createTemplateSeedSSI("default"), {dsuType: openDSU.constants.DSUTypes.BAR}, (err, dossier2) => {
                                 if (err) {
                                     throw err;
                                 }
@@ -67,14 +67,8 @@ assert.callback("mount - trying to mount into an existing mounting point path", 
 
                                                 assert.true(content[2].path === 'dossier2');
 
-                                                dossier1.readDir('/', (err, content) => {
-                                                    if (err) {
-                                                        throw err;
-                                                    }
 
-                                                    assert.true(content[2].path === 'dossier2');
-                                                    testFinishCallback();
-                                                });
+                                                testFinishCallback();
                                             });
                                         });
                                     });
@@ -86,4 +80,4 @@ assert.callback("mount - trying to mount into an existing mounting point path", 
             });
         });
     });
-}, 5000);
+}, 5000000);

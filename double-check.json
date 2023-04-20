@@ -1,0 +1,3 @@
+{
+  "ignore": ["notificationsTest.js", "conflictsResolutionTest.js"]
+}
