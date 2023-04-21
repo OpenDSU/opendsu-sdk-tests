@@ -61,7 +61,7 @@ assert.callback("Create and load Const DSU test", (finishTest) => {
                     if (err) {
                         throw err;
                     }
-                    enclave.createDSU(arraySSI, {useSSIAsIdentifier: true, dsuType: constants.DSUTypes.BAR}, (err, constDSU) => {
+                    enclave.createDSU(arraySSI, {useSSIAsIdentifier: true, dsuType: constants.DSUTypes.LEGACY_DSU}, (err, constDSU) => {
                         if (err) {
                             throw err;
                         }
@@ -106,7 +106,7 @@ assert.callback("Create and load Const DSU test", (finishTest) => {
                                             });
                                         };
 
-                                        enclave.loadDSURecoveryMode(arraySSI, {contentRecoveryFnc:recoveryContentFnc, dsuType: constants.DSUTypes.BAR}, (err, recoveredDSU) => {
+                                        enclave.loadDSURecoveryMode(arraySSI, {contentRecoveryFnc:recoveryContentFnc, dsuType: constants.DSUTypes.LEGACY_DSU}, (err, recoveredDSU) => {
                                             if (err) {
                                                 throw err;
                                             }
@@ -130,7 +130,7 @@ assert.callback("Create and load Const DSU test", (finishTest) => {
                                                     if(err){
                                                         throw err;
                                                     }
-                                                    resolver.loadDSU(arraySSI, {skipCache: true, dsuType: constants.DSUTypes.BAR}, (err, newRef)=>{
+                                                    resolver.loadDSU(arraySSI, {skipCache: true, dsuType: constants.DSUTypes.LEGACY_DSU}, (err, newRef)=>{
                                                         if(err){
                                                             throw err;
                                                         }
