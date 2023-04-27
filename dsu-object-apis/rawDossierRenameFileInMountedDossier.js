@@ -15,35 +15,41 @@ assert.callback("Rename file in mounted dossier test", (testFinishCallback) => {
             const resolver = openDSU.loadApi("resolver");
             const keySSISpace = openDSU.loadApi("keyssi");
 
-            resolver.createDSU(keySSISpace.createTemplateSeedSSI("default"), (err, dossier) => {
+            resolver.createDSU(keySSISpace.createTemplateSeedSSI("default"), async (err, dossier) => {
                 if (err) {
                     throw err;
                 }
 
-                dossier.writeFile("just_a_path", "some_content", (err) => {
+                await dossier.safeBeginBatchAsync();
+                dossier.writeFile("just_a_path", "some_content", async (err) => {
                     if (err) {
                         throw err;
                     }
 
-                    resolver.createDSU(keySSISpace.createTemplateSeedSSI("default"), (err, newDossier) => {
+                    await dossier.commitBatchAsync();
+                    resolver.createDSU(keySSISpace.createTemplateSeedSSI("default"), async (err, newDossier) => {
                         if (err) {
                             throw err;
                         }
 
-                        newDossier.writeFile("testFile", "testContent", (err) => {
+                        await newDossier.safeBeginBatchAsync();
+                        newDossier.writeFile("testFile", "testContent", async (err) => {
+                            await newDossier.commitBatchAsync();
                             assert.true(typeof err === "undefined");
 
-                            newDossier.getKeySSIAsString((err, newDossierKeySSI) => {
+                            newDossier.getKeySSIAsString(async (err, newDossierKeySSI) => {
                                 if (err) {
                                     throw err;
                                 }
 
-                                dossier.mount("/code/constitution", newDossierKeySSI, (err) => {
+                                await dossier.safeBeginBatchAsync();
+                                dossier.mount("/code/constitution", newDossierKeySSI, async (err) => {
                                     if (err) {
                                         throw err;
                                     }
                                     assert.true(typeof err === "undefined");
 
+                                    await dossier.commitBatchAsync();
                                     dossier.readFile("/code/constitution/testFile", (err, data) => {
                                         if (err) {
                                             throw err;
@@ -67,20 +73,27 @@ assert.callback("Rename file in mounted dossier test", (testFinishCallback) => {
 }, 5000);
 
 function runRenameTest(dossier, callback) {
-    dossier.rename('/code/constitution/testFile', '/code/constitution/renamed/file', {
-        ignoreMounts: false
-    }, (err) => {
+    dossier.safeBeginBatch((err) => {
         if (err) {
-            throw err;
+            return callback(err);
         }
 
-        dossier.readFile('/code/constitution/renamed/file', (err, data) => {
+        dossier.rename('/code/constitution/testFile', '/code/constitution/renamed/file', {
+            ignoreMounts: false
+        }, async (err) => {
             if (err) {
                 throw err;
             }
 
-            assert.true(data.toString() === "testContent");
+            await dossier.commitBatchAsync();
+            dossier.readFile('/code/constitution/renamed/file', (err, data) => {
+                if (err) {
+                    throw err;
+                }
+
+                assert.true(data.toString() === "testContent");
+            })
+            callback();
         })
-        callback();
     })
 }

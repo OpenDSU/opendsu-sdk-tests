@@ -38,16 +38,18 @@ $$.flows.describe("AddFilesBatch", {
         const resolver = openDSU.loadApi("resolver");
         const keySSISpace = openDSU.loadApi("keyssi");
 
-        resolver.createDSU(keySSISpace.createTemplateSeedSSI("default"), (err, bar) => {
+        resolver.createDSU(keySSISpace.createTemplateSeedSSI("default"), async (err, bar) => {
             if (err) {
                 throw err;
             }
 
             this.bar = bar;
-            this.bar.addFiles(files, 'filesFolder', {embedded: true}, (err, result) => {
+            await this.bar.safeBeginBatchAsync();
+            this.bar.addFiles(files, 'filesFolder', {embedded: true}, async (err, result) => {
                 if (err) {
                     throw err;
                 }
+                await this.bar.commitBatchAsync();
                 this.runAssertions();
             })
         })

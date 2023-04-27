@@ -25,34 +25,36 @@ $$.flows.describe("CreateEmptyFile", {
     createDSU: function () {
 
         console.log("Started creating DSU");
-        resolver.createDSU(keySSISpace.createTemplateSeedSSI("default"), (err, dsu) => {
+        resolver.createDSU(keySSISpace.createTemplateSeedSSI("default"), async (err, dsu) => {
             if (err) {
                 throw err;
             }
 
             console.log("Started creating file /fld/somePath");
-            this.writeFiles(dsu, () => {
+            await dsu.safeBeginBatchAsync();
+            this.writeFiles(dsu, async () => {
                 this.deleteFiles(dsu);
+                await dsu.commitBatchAsync();
             });
         })
     },
 
     writeFiles: function (dsu, callback) {
-        dsu.writeFile("/fld/somePath", (err, result) => {
-            if (err) {
-                throw err;
-            }
-            console.log("created file /fld/somePath")
-            console.log("Started creating file /fld/somePath1");
-            dsu.writeFile("/fld/somePath1", (err, result) => {
+            dsu.writeFile("/fld/somePath", (err, result) => {
                 if (err) {
-                    return callback(err);
+                    throw err;
                 }
+                console.log("created file /fld/somePath")
+                console.log("Started creating file /fld/somePath1");
+                dsu.writeFile("/fld/somePath1", (err, result) => {
+                    if (err) {
+                        return callback(err);
+                    }
 
-                // console.log("created file /fld/somePath1")
-                callback();
+                    // console.log("created file /fld/somePath1")
+                    callback();
+                })
             })
-        })
     },
 
     deleteFiles(dsu) {

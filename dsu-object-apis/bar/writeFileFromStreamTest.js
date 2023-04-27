@@ -30,15 +30,17 @@ $$.flows.describe('WriteFileFromStream', {
         const resolver = openDSU.loadApi("resolver");
         const keySSISpace = openDSU.loadApi("keyssi");
 
-        resolver.createDSU(keySSISpace.createTemplateSeedSSI("default"), (err, bar) => {
+        resolver.createDSU(keySSISpace.createTemplateSeedSSI("default"), async (err, bar) => {
             if (err) {
                 throw err;
             }
 
             this.bar = bar;
             const fileStream = fs.createReadStream(filePath);
-            this.bar.writeFile(barPath, fileStream, (err, data) => {
+            await bar.safeBeginBatchAsync();
+            this.bar.writeFile(barPath, fileStream, async (err, data) => {
                 assert.true(err === null || typeof err === "undefined", "Failed to write file.");
+                await this.bar.commitBatchAsync();
                 this.bar.getKeySSIAsString((err, keySSI) => {
                     if (err) {
                         throw err;

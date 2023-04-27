@@ -25,28 +25,34 @@ assert.callback("mount - mount multiple dossiers into other mounted dossiers", (
                         throw err;
                     }
 
-                    dossier1.getKeySSIAsString((err, dossier1KeySSI) => {
+                    dossier1.getKeySSIAsString(async (err, dossier1KeySSI) => {
                         if (err) {
                             throw err;
                         }
-                        rawDossier.mount('/dossier1', dossier1KeySSI, (err) => {
+
+                        await rawDossier.safeBeginBatchAsync();
+                        rawDossier.mount('/dossier1', dossier1KeySSI, async (err) => {
                             if (err) {
                                 throw err;
                             }
 
+                            await rawDossier.commitBatchAsync();
                             resolver.createDSU(keySSISpace.createTemplateSeedSSI("default"), (err, dossier2) => {
                                 if (err) {
                                     throw err;
                                 }
-                                dossier2.getKeySSIAsString((err, dossier2KeySSI) => {
+                                dossier2.getKeySSIAsString(async (err, dossier2KeySSI) => {
                                     if (err) {
                                         throw err;
                                     }
-                                    dossier1.mount('/dossier2', dossier2KeySSI, (err) => {
+
+                                    await dossier1.safeBeginBatchAsync();
+                                    dossier1.mount('/dossier2', dossier2KeySSI, async (err) => {
                                         if (err) {
                                             throw err;
                                         }
 
+                                        await dossier1.commitBatchAsync();
                                         rawDossier.readDir('/', (err, content) => {
                                             if (err) {
                                                 throw err;
@@ -64,25 +70,28 @@ assert.callback("mount - mount multiple dossiers into other mounted dossiers", (
                                                         throw err;
                                                     }
 
-                                                    dossier3.getKeySSIAsString((err, dossier3KeySSI) => {
+                                                    dossier3.getKeySSIAsString(async (err, dossier3KeySSI) => {
                                                         if (err) {
                                                             throw err;
                                                         }
-                                                        rawDossier.mount('/dossier3', dossier3KeySSI, (err) => {
+
+                                                        await rawDossier.safeBeginBatchAsync();
+                                                        rawDossier.mount('/dossier3', dossier3KeySSI, async (err) => {
                                                             if (err) {
                                                                 throw err;
                                                             }
 
-                                                            resolver.loadDSU(dossier1KeySSI, (err, dossier1Loaded) => {
+                                                            await rawDossier.commitBatchAsync();
+                                                            resolver.loadDSU(dossier1KeySSI, async (err, dossier1Loaded) => {
                                                                 if (err) {
                                                                     throw err;
                                                                 }
-
-                                                                dossier1Loaded.mount('/dossier4', dossier3KeySSI, (err) => {
+                                                                await dossier1Loaded.safeBeginBatchAsync();
+                                                                dossier1Loaded.mount('/dossier4', dossier3KeySSI, async (err) => {
                                                                     if (err) {
                                                                         throw err;
                                                                     }
-
+                                                                    await dossier1Loaded.commitBatchAsync();
                                                                     dossier1Loaded.readDir('/', (err, content) => {
                                                                         if (err) {
                                                                             throw err;

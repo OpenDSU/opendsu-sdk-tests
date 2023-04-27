@@ -61,18 +61,20 @@ assert.callback("Create and load Const DSU test", (finishTest) => {
                     if (err) {
                         throw err;
                     }
-                    enclave.createDSU(arraySSI, {useSSIAsIdentifier: true, encrypt: false}, (err, constDSU) => {
+                    enclave.createDSU(arraySSI, {useSSIAsIdentifier: true, encrypt: false}, async (err, constDSU) => {
                         if (err) {
                             throw err;
                         }
 
                         let filename = "/onefile.txt";
                         let fileContent = "data-to-not-be-altered"
-                        constDSU.writeFile(filename, fileContent, (err)=>{
+                        await constDSU.safeBeginBatchAsync();
+                        constDSU.writeFile(filename, fileContent, async (err)=>{
                             if(err){
                                 throw err;
                             }
 
+                            await constDSU.commitBatchAsync();
                             resolver.invalidateDSUCache(arraySSI, (err)=>{
                                 //resetting brick cache
                                 require('psk-cache').getDefaultInstance().resetCache();

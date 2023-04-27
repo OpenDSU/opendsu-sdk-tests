@@ -15,51 +15,61 @@ assert.callback("rawDossier - write file into a mounted dossier", (testFinishCal
             const resolver = openDSU.loadApi("resolver");
             const keySSISpace = openDSU.loadApi("keyssi");
 
-            resolver.createDSU(keySSISpace.createTemplateSeedSSI("default"), (err, ref) => {
+            resolver.createDSU(keySSISpace.createTemplateSeedSSI("default"), async (err, ref) => {
                 if (err) {
                     throw err;
                 }
 
-                ref.writeFile("text.txt", "some text for a complex test", (err) => {
+                await ref.safeBeginBatchAsync();
+                ref.writeFile("text.txt", "some text for a complex test", async (err) => {
                     if (err) {
                         throw err;
                     }
 
-                    resolver.createDSU(keySSISpace.createTemplateSeedSSI("default"), (err, newDossier) => {
+                    await ref.commitBatchAsync();
+                    resolver.createDSU(keySSISpace.createTemplateSeedSSI("default"), async (err, newDossier) => {
                         if (err) {
                             throw err;
                         }
 
-                        newDossier.writeFile("/tempFile", "", (err) => {
+                        await newDossier.safeBeginBatchAsync();
+                        newDossier.writeFile("/tempFile", "", async (err) => {
                             if (err) {
                                 throw err;
                             }
 
-                            newDossier.getKeySSIAsString((err, newDossierKeySSI) => {
+                            await newDossier.commitBatchAsync();
+                            newDossier.getKeySSIAsString(async (err, newDossierKeySSI) => {
                                 if (err) {
                                     throw err;
                                 }
-                                ref.mount('/dossier', newDossierKeySSI, (err) => {
+
+                                await ref.safeBeginBatchAsync();
+                                ref.mount('/dossier', newDossierKeySSI, async (err) => {
                                     if (err) {
                                         throw err;
                                     }
 
+                                    await ref.commitBatchAsync();
                                     ref.getKeySSIAsString((err, refKeySSI) => {
                                         if (err) {
                                             throw err;
                                         }
-                                        resolver.loadDSU(refKeySSI, (err, ref2) => {
+                                        resolver.loadDSU(refKeySSI, async (err, ref2) => {
                                             if (err) {
                                                 throw err;
                                             }
+
+                                            await ref2.safeBeginBatchAsync();
                                             ref2.writeFile("/dossier/file.txt", 'some text for a file inside a mounted dossier', {
                                                 ignoreMounts: false,
                                                 encrypt: true
-                                            }, function (err) {
+                                            }, async function (err) {
                                                 if (err) {
                                                     throw err;
                                                 }
 
+                                                await ref2.commitBatchAsync();
                                                 newDossier.load((err) => {
                                                     if (err) {
                                                         throw err;

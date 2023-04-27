@@ -24,29 +24,35 @@ double_check.createTestFolder("bar_test_folder", (err, testFolder) => {
                     throw err;
                 }
 
-                bar.writeFile("a.txt", fileData, (err, brickMapDigest) => {
+                bar.safeBeginBatch(err => {
                     if (err) {
                         throw err;
                     }
-                    assert.true(err === null || typeof err === "undefined", "Failed to write file in BAR");
-                    assert.true(brickMapDigest !== null && typeof brickMapDigest !== "undefined", "Bar map digest is null or undefined");
-
-                    bar.getKeySSIAsString((err, keySSI) => {
+                    bar.writeFile("a.txt", fileData, async (err, brickMapDigest) => {
                         if (err) {
                             throw err;
                         }
-                        resolver.loadDSU(keySSI, (err, newBar) => {
+
+                        assert.true(err === null || typeof err === "undefined", "Failed to write file in BAR");
+
+                        await bar.commitBatchAsync();
+                        bar.getKeySSIAsString((err, keySSI) => {
                             if (err) {
                                 throw err;
                             }
-                            newBar.readFile("a.txt", (err, data) => {
-                                assert.true(err === null || typeof err === "undefined", "Failed read file from BAR.");
-                                assert.true(fileData === data.toString(), "Invalid read data");
+                            resolver.loadDSU(keySSI, (err, newBar) => {
+                                if (err) {
+                                    throw err;
+                                }
+                                newBar.readFile("a.txt", (err, data) => {
+                                    assert.true(err === null || typeof err === "undefined", "Failed read file from BAR.");
+                                    assert.true(fileData === data.toString(), "Invalid read data");
 
-                                callback();
-                            });
+                                    callback();
+                                });
+                            })
                         })
-                    })
+                    });
                 });
             })
         });

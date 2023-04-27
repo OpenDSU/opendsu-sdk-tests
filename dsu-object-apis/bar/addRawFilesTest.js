@@ -42,11 +42,21 @@ $$.flows.describe("AddRawFiles", {
             }
 
             this.bar = bar;
-            this.bar.addFiles(files, 'filesFolder', (err, result) => {
+            this.bar.safeBeginBatch(err => {
                 if (err) {
                     throw err;
                 }
-                this.runAssertions();
+                this.bar.addFiles(files, 'filesFolder', (err, result) => {
+                    if (err) {
+                        throw err;
+                    }
+                    this.bar.commitBatch(err => {
+                        if (err) {
+                            throw err;
+                        }
+                        this.runAssertions();
+                    })
+                })
             })
         })
     },

@@ -42,22 +42,24 @@ assert.callback("Create and load DSU test", (finishTest) => {
                             throw err;
                         }
 
-                        dsu.getKeySSIAsObject((err, seed) => {
+                        dsu.getKeySSIAsObject(async (err, seed) => {
                             if (err) {
                                 throw err;
                             }
 
+                            await dsu.safeBeginBatchAsync()
                             dsu.writeFile("/test.txt", "just content", (err) => {
                                 console.log("Frist write was called!!!", new Date().getTime());
                                 if (err) {
                                     throw err;
                                 }
 
-                                dsu.writeFile("/secondfile.txt", "content that will be deleted from brick storage", (err) => {
+                                dsu.writeFile("/secondfile.txt", "content that will be deleted from brick storage", async (err) => {
                                     if (err) {
                                         throw err;
                                     }
 
+                                    await dsu.commitBatchAsync();
                                     seed.getAnchorId((err, anchorId) => {
                                         if (err) {
                                             throw err;
@@ -77,11 +79,18 @@ assert.callback("Create and load DSU test", (finishTest) => {
                                                 if (dsu) {
                                                     dsu.restored = true;
 
-                                                    dsu.writeFile("/restoredFile.txt", "restored data", (err)=>{
-                                                        if(err){
-                                                            throw err;
+                                                    dsu.safeBeginBatch((err) => {
+                                                        if (err) {
+                                                            return callback(err);
                                                         }
-                                                        return callback(undefined, dsu);
+                                                        dsu.writeFile("/restoredFile.txt", "restored data", async (err) => {
+                                                            if (err) {
+                                                                throw err;
+                                                            }
+
+                                                            await dsu.commitBatchAsync();
+                                                            return callback(undefined, dsu);
+                                                        });
                                                     });
                                                 }
                                             };

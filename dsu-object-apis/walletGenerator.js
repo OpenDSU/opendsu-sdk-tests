@@ -27,33 +27,39 @@ function generateWallet(webappFolder, callback) {
     const resolver = openDSU.loadApi("resolver");
     const keySSISpace = openDSU.loadApi("keyssi");
 
-    resolver.createDSU(keySSISpace.createTemplateSeedSSI("default"), (err, walletTemplate) => {
+    resolver.createDSU(keySSISpace.createTemplateSeedSSI("default"), async (err, walletTemplate) => {
         if (err) {
             throw err;
         }
-        walletTemplate.addFolder("../../psknode/bundles", "/", (err) => {
+
+        await walletTemplate.safeBeginBatchAsync();
+        walletTemplate.addFolder("../../psknode/bundles", "/", async (err) => {
             if (err) {
                 throw err;
             }
 
+            await walletTemplate.commitBatchAsync();
             resolver.createDSU(keySSISpace.createTemplateSeedSSI("default"), (err, wallet) => {
                 if (err) {
                     throw err;
                 }
-                walletTemplate.getKeySSIAsString((err, walletTemplateKeySSI) => {
+                walletTemplate.getKeySSIAsString(async (err, walletTemplateKeySSI) => {
                     if (err) {
                         throw err;
                     }
+
+                    await wallet.safeBeginBatchAsync();
                     wallet.mount("/constitution", walletTemplateKeySSI, function (err) {
                         if (err) {
                             throw err;
                         }
 
-                        wallet.addFolder(webappFolder, "app", function (err) {
+                        wallet.addFolder(webappFolder, "app", async function (err) {
                             if (err) {
                                 throw err;
                             }
 
+                            await wallet.commitBatchAsync();
                             wallet.readFile("/app/index.html", function (err, content) {
                                 if (err) {
                                     throw  err;

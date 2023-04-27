@@ -15,31 +15,35 @@ assert.callback("Rename file in dossier", (testFinishCallback) => {
             const resolver = openDSU.loadApi("resolver");
             const keySSISpace = openDSU.loadApi("keyssi");
 
-            resolver.createDSU(keySSISpace.createTemplateSeedSSI("default"), (err, dossier) => {
+            resolver.createDSU(keySSISpace.createTemplateSeedSSI("default"), async (err, dossier) => {
                 if (err) {
                     throw err;
                 }
 
+                await dossier.safeBeginBatchAsync();
                 dossier.writeFile("/my/file/just_a_path", "some_content", (err) => {
                     if (err) {
                         throw err;
                     }
 
-                    dossier.rename('/my/file/just_a_path', '/folder/renamed_file', (err) => {
+                    dossier.rename('/my/file/just_a_path', '/folder/renamed_file', async (err) => {
                         if (err) {
                             throw err;
                         }
 
-                        dossier.readFile('/folder/renamed_file', (err, data) => {
+                        await dossier.commitBatchAsync();
+                        dossier.readFile('/folder/renamed_file', async (err, data) => {
                             if (err) {
                                 throw err;
                             }
 
-                            dossier.rename('/folder', '/renamed/folder', (err) => {
+                            await dossier.safeBeginBatchAsync();
+                            dossier.rename('/folder', '/renamed/folder', async (err) => {
                                 if (err) {
                                     throw err;
                                 }
 
+                                await dossier.commitBatchAsync();
                                 dossier.readFile('/renamed/folder/renamed_file', (err, data) => {
                                     if (err) {
                                         throw err;

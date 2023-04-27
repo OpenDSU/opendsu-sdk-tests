@@ -57,19 +57,26 @@ $$.flows.describe("AddFile", {
     },
 
     addFile: function () {
-        this.archive.addFile(filePath, barPath, (err, mapDigest) => {
+        this.archive.safeBeginBatch(err => {
             if (err) {
                 throw err;
             }
-            let fs = require("fs");
-            //double_check.deleteFoldersSync(folderPath);
-            fs.rmdirSync(folderPath, {recursive: true, maxRetries: 10});
-            this.archive.getKeySSIAsString((err, keySSI) => {
+            this.archive.addFile(filePath, barPath, async (err, mapDigest) => {
                 if (err) {
                     throw err;
                 }
 
-                this.extractFile(keySSI);
+                await this.archive.commitBatchAsync();
+                let fs = require("fs");
+                //double_check.deleteFoldersSync(folderPath);
+                fs.rmdirSync(folderPath, {recursive: true, maxRetries: 10});
+                this.archive.getKeySSIAsString((err, keySSI) => {
+                    if (err) {
+                        throw err;
+                    }
+
+                    this.extractFile(keySSI);
+                });
             });
         });
     },

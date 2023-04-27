@@ -14,34 +14,40 @@ assert.callback("Test list files from a mount point", (testFinishCallback) => {
             const resolver = openDSU.loadApi("resolver");
             const keySSISpace = openDSU.loadApi("keyssi");
 
-            resolver.createDSU(keySSISpace.createTemplateSeedSSI("default"), (err, ref) => {
+            resolver.createDSU(keySSISpace.createTemplateSeedSSI("default"), async (err, ref) => {
                 if (err) {
                     throw err;
                 }
                 const fileName = 'simpleFile';
-                ref.writeFile(fileName, "withcontent", (err) => {
+                await ref.safeBeginBatchAsync();
+                ref.writeFile(fileName, "withcontent", async (err) => {
                     if (err) {
                         throw err;
                     }
 
+                    await ref.commitBatchAsync();
                     resolver.createDSU(keySSISpace.createTemplateSeedSSI("default"), (err, raw_dossier) => {
 
                         if (err) {
                             throw err;
                         }
 
-                        ref.getKeySSIAsString((err, refKeySSI) => {
+                        ref.getKeySSIAsString(async (err, refKeySSI) => {
                             if (err) {
                                 throw err;
                             }
+
+                            await raw_dossier.safeBeginBatchAsync();
                             raw_dossier.mount("/code/test", refKeySSI, (err) => {
                                 if (err) {
                                     throw err;
                                 }
-                                raw_dossier.writeFile("just_a_path", "some_content", function (err) {
+                                raw_dossier.writeFile("just_a_path", "some_content", async function (err) {
                                     if (err) {
                                         throw err;
                                     }
+
+                                    await raw_dossier.commitBatchAsync();
                                     raw_dossier.getKeySSIAsString((err, raw_dossierKeySSI) => {
                                         if (err) {
                                             throw err;

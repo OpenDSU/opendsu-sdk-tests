@@ -41,35 +41,43 @@ $$.flows.describe("AddFolderBatch", {
             }
 
             this.bar = bar;
-            this.addFolder(folderPath, "fld1", (err, initialHash) => {
+            this.bar.safeBeginBatch(err => {
                 if (err) {
                     throw err;
                 }
 
-                this.bar.getKeySSIAsString((err, seedSSI) => {
-                    resolver.loadDSU(seedSSI, (err, dsu) => {
-                        dsu.listFiles('/', (err, files) => {
-                            assert.true(files.length === 4);
 
-                            dsu.readFile('/fld1/a.txt', (err, data) => {
-                                assert.true(err === null || typeof err === "undefined", "Failed to read file");
-                                assert.true(text[0] === data.toString(), "Invalid read first file");
+                this.addFolder(folderPath, "fld1", async (err, initialHash) => {
+                    if (err) {
+                        throw err;
+                    }
 
-                                dsu.readFile('/fld1/b.txt', (err, data) => {
+                    await bar.commitBatchAsync();
+                    this.bar.getKeySSIAsString((err, seedSSI) => {
+                        resolver.loadDSU(seedSSI, (err, dsu) => {
+                            dsu.listFiles('/', (err, files) => {
+                                assert.true(files.length === 4);
+
+                                dsu.readFile('/fld1/a.txt', (err, data) => {
                                     assert.true(err === null || typeof err === "undefined", "Failed to read file");
-                                    assert.true(text[1] === data.toString(), "Invalid read second file");
+                                    assert.true(text[0] === data.toString(), "Invalid read first file");
 
-                                    dsu.readFile('/fld1/c.txt', (err, data) => {
+                                    dsu.readFile('/fld1/b.txt', (err, data) => {
                                         assert.true(err === null || typeof err === "undefined", "Failed to read file");
-                                        assert.true(text[2] === data.toString(), "Invalid read third file");
+                                        assert.true(text[1] === data.toString(), "Invalid read second file");
 
-                                        this.callback();
+                                        dsu.readFile('/fld1/c.txt', (err, data) => {
+                                            assert.true(err === null || typeof err === "undefined", "Failed to read file");
+                                            assert.true(text[2] === data.toString(), "Invalid read third file");
+
+                                            this.callback();
+                                        });
                                     });
                                 });
-                            });
+                            })
                         })
                     })
-                })
+                });
             });
         })
     },

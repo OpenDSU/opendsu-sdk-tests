@@ -18,8 +18,8 @@ assert.callback("Resolve conflicts when you have an older version and try to mou
                 if (err) {
                     throw err;
                 }
-                firstDSUInstance.getKeySSIAsObject((err, firstIdentifier)=>{
-                    if(err){
+                firstDSUInstance.getKeySSIAsObject((err, firstIdentifier) => {
+                    if (err) {
                         throw err;
                     }
 
@@ -27,53 +27,58 @@ assert.callback("Resolve conflicts when you have an older version and try to mou
                         if (err) {
                             throw err;
                         }
-                        secondDSUInstance.getKeySSIAsObject((err, secondIdentifier)=> {
+                        secondDSUInstance.getKeySSIAsObject((err, secondIdentifier) => {
                             if (err) {
                                 throw err;
                             }
 
 
-                            resolver.invalidateDSUCache(firstIdentifier, ()=>{
+                            resolver.invalidateDSUCache(firstIdentifier, () => {
                                 if (err) {
                                     throw err;
                                 }
-                                resolver.invalidateDSUCache(secondIdentifier, ()=>{
+                                resolver.invalidateDSUCache(secondIdentifier, () => {
                                     if (err) {
                                         throw err;
                                     }
 
-                                    resolver.loadDSU(firstIdentifier, (err, firstDSUAfterLoad)=>{
+                                    resolver.loadDSU(firstIdentifier, async (err, firstDSUAfterLoad) => {
                                         if (err) {
                                             throw err;
                                         }
-                                        firstDSUAfterLoad.writeFile("/test", "test", (err)=>{
+
+                                        await firstDSUAfterLoad.safeBeginBatchAsync();
+                                        firstDSUAfterLoad.writeFile("/test", "test", async (err) => {
                                             if (err) {
                                                 throw err;
                                             }
-                                            resolver.invalidateDSUCache(firstIdentifier, (err)=> {
+
+                                            await firstDSUAfterLoad.commitBatchAsync();
+                                            resolver.invalidateDSUCache(firstIdentifier, async (err) => {
                                                 if (err) {
                                                     throw err;
                                                 }
 
-                                                firstDSUInstance.mount("/mountingPoint", secondIdentifier.getIdentifier(), (err)=>{
+                                                await firstDSUInstance.safeBeginBatchAsync();
+                                                firstDSUInstance.mount("/mountingPoint", secondIdentifier.getIdentifier(), async (err) => {
                                                     if (err) {
                                                         throw err;
                                                     }
-
-                                                    resolver.invalidateDSUCache(firstIdentifier, (err)=> {
+                                                    await firstDSUInstance.commitBatchAsync();
+                                                    resolver.invalidateDSUCache(firstIdentifier, (err) => {
                                                         if (err) {
                                                             throw err;
                                                         }
 
-                                                        resolver.loadDSU(firstIdentifier.getIdentifier(), (err, firstDSUAfterLoad)=> {
+                                                        resolver.loadDSU(firstIdentifier.getIdentifier(), (err, firstDSUAfterLoad) => {
                                                             if (err) {
                                                                 throw err;
                                                             }
-                                                            firstDSUAfterLoad.listFiles("/", (err, files)=>{
+                                                            firstDSUAfterLoad.listFiles("/", (err, files) => {
                                                                 if (err) {
                                                                     throw err;
                                                                 }
-                                                                assert.true(files.length===4);
+                                                                assert.true(files.length === 4);
                                                                 testFinishCallback();
                                                             });
                                                         });

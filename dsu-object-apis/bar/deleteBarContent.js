@@ -19,12 +19,13 @@ double_check.createTestFolder("bar_delete_content", (err, testFolder) => {
             const resolver = openDSU.loadApi("resolver");
             const keySSISpace = openDSU.loadApi("keyssi");
 
-            resolver.createDSU(keySSISpace.createTemplateSeedSSI("default"), (err, bar) => {
+            resolver.createDSU(keySSISpace.createTemplateSeedSSI("default"), async (err, bar) => {
                 if (err) {
                     throw err;
                 }
 
                 let callbackCallCounter = 0;
+                await bar.safeBeginBatchAsync();
                 bar.delete("/", (err) => {
                     if (err) {
                         throw err;
@@ -35,7 +36,8 @@ double_check.createTestFolder("bar_delete_content", (err, testFolder) => {
                         assert.equal(err, undefined, 'File was written');
                         callbackCallCounter++;
 
-                        bar.delete("/", (err) => {
+                        bar.delete("/", async (err) => {
+                            await bar.commitBatchAsync();
                             assert.equal(callbackCallCounter, 1, "The parent callback was not called a second time");
                             assert.equal(err, undefined, 'Bar was emptied again')
                             callback();

@@ -20,25 +20,30 @@ assert.callback("mount - mount dossier inside a folder of a mounted dossier", (t
                     throw err;
                 }
 
-                resolver.createDSU(keySSISpace.createTemplateSeedSSI("default"), (err, dossier1) => {
+                resolver.createDSU(keySSISpace.createTemplateSeedSSI("default"), async (err, dossier1) => {
                     if (err) {
                         throw err;
                     }
 
-                    dossier1.writeFile('/folder1/file1.txt', 'text', (err) => {
+                    await dossier1.safeBeginBatchAsync();
+                    dossier1.writeFile('/folder1/file1.txt', 'text', async (err) => {
                         if (err) {
                             throw err;
                         }
 
-                        dossier1.getKeySSIAsString((err, keySSI) => {
+                        await dossier1.commitBatchAsync();
+                        dossier1.getKeySSIAsString(async (err, keySSI) => {
                             if (err) {
                                 throw err;
                             }
-                            rawDossier.mount('/folder1/dossier1', keySSI, (err) => {
+
+                            await rawDossier.safeBeginBatchAsync();
+                            rawDossier.mount('/folder1/dossier1', keySSI, async (err) => {
                                 if (err) {
                                     throw err;
                                 }
 
+                                await rawDossier.commitBatchAsync();
                                 rawDossier.listMountedDossiers('', (err, content) => {
                                     if (err) {
                                         throw err;

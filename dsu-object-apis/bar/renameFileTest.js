@@ -19,30 +19,34 @@ double_check.createTestFolder("bar_test_folder", (err, testFolder) => {
             const resolver = openDSU.loadApi("resolver");
             const keySSISpace = openDSU.loadApi("keyssi");
 
-            resolver.createDSU(keySSISpace.createTemplateSeedSSI("default"), (err, bar) => {
+            resolver.createDSU(keySSISpace.createTemplateSeedSSI("default"), async (err, bar) => {
                 if (err) {
                     throw err;
                 }
 
-                bar.writeFile("/x/y/z/a.txt", fileData, (err, brickMapDigest) => {
+                await bar.safeBeginBatchAsync();
+                bar.writeFile("/x/y/z/a.txt", fileData, async (err, brickMapDigest) => {
                     if (err) {
                         throw err;
                     }
                     assert.true(err === null || typeof err === "undefined", "Failed to write file in BAR");
-                    assert.true(brickMapDigest !== null && typeof brickMapDigest !== "undefined", "Bar map digest is null or undefined");
 
+                    await bar.commitBatchAsync();
                     bar.getKeySSIAsString((err, keySSI) => {
                         if (err) {
                             throw err;
                         }
 
-                        resolver.loadDSU(keySSI, (err, newBar) => {
+                        resolver.loadDSU(keySSI, async (err, newBar) => {
                             if (err) {
                                 throw err;
                             }
-                            newBar.rename("/x/y/z/a.txt", "/b.txt", (err) => {
+
+                            await newBar.safeBeginBatchAsync();
+                            newBar.rename("/x/y/z/a.txt", "/b.txt", async (err) => {
                                 assert.true(err === null || typeof err === "undefined", "Failed rename file.");
 
+                                await newBar.commitBatchAsync();
                                 newBar.readFile("/b.txt", (err, data) => {
                                     assert.true(err === null || typeof err === "undefined", "Failed read file from BAR.");
                                     assert.true(fileData === data.toString(), "Invalid read data");

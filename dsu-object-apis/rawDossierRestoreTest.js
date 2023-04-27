@@ -14,16 +14,18 @@ assert.callback("rawDossier restore test", (testFinishCallback) => {
             const resolver = openDSU.loadApi("resolver");
             const keySSISpace = openDSU.loadApi("keyssi");
 
-            resolver.createDSU(keySSISpace.createTemplateSeedSSI("default"), (err, ref) => {
+            resolver.createDSU(keySSISpace.createTemplateSeedSSI("default"), async (err, ref) => {
                 if (err) {
                     throw err;
                 }
 
-                ref.addFolder("../../psknode/bundles", "/constitution", (err) => {
+                await ref.safeBeginBatchAsync();
+                ref.addFolder("../../psknode/bundles", "/constitution", async (err) => {
                     if (err) {
                         throw err;
                     }
 
+                    await ref.commitBatchAsync();
                     ref.getKeySSIAsString((err, refKeySSI) => {
                         if (err) {
                             throw err;

@@ -44,20 +44,29 @@ $$.flows.describe("AddRawFile", {
             }
 
             this.bar = bar;
-            this.addFile(filePath, "fld/a.txt", (err, initialHash) => {
+            this.bar.safeBeginBatch(err => {
                 if (err) {
                     throw err;
                 }
 
-
-                this.addFile(filePath, "fld/b.txt", (err, controlHash) => {
+                this.addFile(filePath, "fld/a.txt", (err, initialHash) => {
                     if (err) {
                         throw err;
                     }
 
-                    this.callback();
-                })
+                    this.addFile(filePath, "fld/b.txt", (err, controlHash) => {
+                        if (err) {
+                            throw err;
+                        }
 
+                        this.bar.commitBatch(err => {
+                            if (err) {
+                                throw err;
+                            }
+                            this.callback();
+                        })
+                    })
+                })
             });
         })
     },

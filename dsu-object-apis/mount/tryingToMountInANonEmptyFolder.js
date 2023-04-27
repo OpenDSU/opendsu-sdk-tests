@@ -19,28 +19,36 @@ assert.callback("Trying to mount in a non-empty folder test", (testFinishCallbac
             const subFolder = "folder";
 
             resolver.createDSU(keySSISpace.createTemplateSeedSSI("default" +
-                ""), (err, ref) => {
+                ""), async (err, ref) => {
                 if (err) {
                     throw err;
                 }
-                ref.writeFile(pskPath.ensureIsAbsolute(fileName), "withcontent", (err) => {
+
+                await ref.safeBeginBatchAsync();
+                ref.writeFile(pskPath.ensureIsAbsolute(fileName), "withcontent", async (err) => {
                     if (err) {
                         throw err;
                     }
-                    resolver.createDSU(keySSISpace.createTemplateSeedSSI("default"), (err, raw_dossier) => {
+
+                    await ref.commitBatchAsync();
+                    resolver.createDSU(keySSISpace.createTemplateSeedSSI("default"), async (err, raw_dossier) => {
                         if (err) {
                             throw err;
                         }
+
+                        await raw_dossier.safeBeginBatchAsync();
                         raw_dossier.writeFile(pskPath.join("/", folderName, subFolder, fileName), "content", (err) => {
                             if (err) {
                                 throw err;
                             }
 
-                            ref.getKeySSIAsString((err, keySSI) => {
+                            ref.getKeySSIAsString(async (err, keySSI) => {
                                 if (err) {
                                     throw err;
                                 }
-                                raw_dossier.mount(pskPath.join("/", folderName, subFolder), keySSI, (err) => {
+                                raw_dossier.mount(pskPath.join("/", folderName, subFolder), keySSI, async (err) => {
+                                    await raw_dossier.commitBatchAsync();
+
                                     assert.true(err && err.message === "Tried to mount in a non-empty folder");
                                     testFinishCallback();
                                 });

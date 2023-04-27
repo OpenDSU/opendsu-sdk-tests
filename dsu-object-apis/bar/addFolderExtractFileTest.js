@@ -20,12 +20,12 @@ $$.flows.describe("AddFolderToCSB", {
         double_check.ensureFilesExist([folderPath], files, text, (err) => {
             assert.true(err === null || typeof err === "undefined", "Failed to create folder hierarchy.");
 
-                double_check.createTestFolder('AddFilesBatch', async (err, folder) => {
-                    tir.launchApiHubTestNode(100, folder, async err => {
-                assert.true(err === null || typeof err === "undefined", "Failed to create server.");
+            double_check.createTestFolder('AddFilesBatch', async (err, folder) => {
+                tir.launchApiHubTestNode(100, folder, async err => {
+                    assert.true(err === null || typeof err === "undefined", "Failed to create server.");
 
-                this.createBAR();
-            });
+                    this.createBAR();
+                });
             });
         });
 
@@ -46,13 +46,20 @@ $$.flows.describe("AddFolderToCSB", {
     },
 
     addFolder: function () {
-        this.bar.addFolder(folderPath, "fld", (err, mapDigest) => {
+        this.bar.safeBeginBatch(err => {
             if (err) {
                 throw err;
             }
-            assert.true(err === null || typeof err === "undefined", "Failed to add folder.");
-            this.extractFile();
-        });
+            this.bar.addFolder(folderPath, "fld", async (err, mapDigest) => {
+                if (err) {
+                    throw err;
+                }
+
+                await this.bar.commitBatchAsync();
+                assert.true(err === null || typeof err === "undefined", "Failed to add folder.");
+                this.extractFile();
+            });
+        })
     },
 
     extractFile: function () {

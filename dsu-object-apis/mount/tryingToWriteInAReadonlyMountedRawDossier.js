@@ -16,29 +16,36 @@ assert.callback("Trying to write in a readonly mounted RawDossier", (testFinishC
 
             const fileName = 'simpleFile';
             const folderName = "/dir";
-            resolver.createDSU(keySSISpace.createTemplateSeedSSI("default"), (err, ref) => {
+            resolver.createDSU(keySSISpace.createTemplateSeedSSI("default"), async (err, ref) => {
                 if (err) {
                     throw err;
                 }
-                ref.writeFile(fileName, "withcontent", (err) => {
+
+                await ref.safeBeginBatchAsync();
+                ref.writeFile(fileName, "withcontent",async (err) => {
                     if (err) {
                         throw err;
                     }
+
+                    await ref.commitBatchAsync();
                     resolver.createDSU(keySSISpace.createTemplateSeedSSI("default"), (err, raw_dossier) => {
                         if (err) {
                             throw err;
                         }
 
-                        ref.getKeySSIAsString((err, keySSI) => {
+                        ref.getKeySSIAsString(async (err, keySSI) => {
                             if (err) {
                                 throw err;
                             }
+
+                            await raw_dossier.safeBeginBatchAsync();
                             raw_dossier.mount(folderName + "/test", keySSI, (err) => {
                                 if (err) {
                                     throw err;
                                 }
 
-                                raw_dossier.writeFile(folderName + "/test/anotherFile", "some data", {ignoreMounts: false}, (err) => {
+                                raw_dossier.writeFile(folderName + "/test/anotherFile", "some data", {ignoreMounts: false}, async (err) => {
+                                    await raw_dossier.commitBatchAsync();
                                     assert.true(typeof err === "undefined");
                                     testFinishCallback();
                                 });

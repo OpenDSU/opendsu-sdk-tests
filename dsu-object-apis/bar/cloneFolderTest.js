@@ -34,18 +34,24 @@ $$.flows.describe("CloneFolder", {
     },
 
     addFiles: function (dsu) {
-        dsu.writeFile("fld/file1", "some_data", (err, result) => {
+        dsu.safeBeginBatch(err => {
             if (err) {
                 throw err;
             }
-            dsu.writeFile("fld/file2", "some_other_data", (err, result) => {
+            dsu.writeFile("fld/file1", "some_data", (err, result) => {
                 if (err) {
                     throw err;
                 }
+                dsu.writeFile("fld/file2", "some_other_data", (err, result) => {
+                    if (err) {
+                        throw err;
+                    }
 
-                dsu.cloneFolder("fld", "fld2", () => {
-                    this.mountDSU(dsu);
-                });
+                    dsu.cloneFolder("fld", "fld2", async () => {
+                        await dsu.commitBatchAsync();
+                        this.mountDSU(dsu);
+                    });
+                })
             })
         })
     },
@@ -53,14 +59,20 @@ $$.flows.describe("CloneFolder", {
     mountDSU: function (mountedDSU) {
         const resolver = openDSU.loadApi("resolver");
         const keySSISpace = openDSU.loadApi("keyssi");
-        resolver.createDSU(keySSISpace.createTemplateSeedSSI("default"), (err, dsu) => {
+        resolver.createDSU(keySSISpace.createTemplateSeedSSI("default"), async (err, dsu) => {
             if (err) {
                 throw err;
             }
 
-            mountedDSU.getKeySSIAsString((err, keySSI) => {
-                dsu.mount("root", keySSI, () => {
+            mountedDSU.getKeySSIAsString(async (err, keySSI) => {
+                if (err) {
+                    throw err;
+                }
+
+                await dsu.safeBeginBatchAsync();
+                dsu.mount("root", keySSI, async () => {
                     this.dsu = dsu;
+                    await dsu.commitBatchAsync()
                     this.loadDSU();
                 });
             });

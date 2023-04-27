@@ -49,7 +49,11 @@ $$.flows.describe("BatchOperationsTest", {
 
     testBatchIsCommited: function (dsu) {
         this.testDSU = dsu;
-        this.testDSU.beginBatch();
+        this.testDSU.safeBeginBatch((err) => {
+            if(err){
+                throw err;
+            }
+
         this.testDSU.writeFile('f1.txt', text[0], (err) => {
             if (err) {
                 throw err;
@@ -85,28 +89,30 @@ $$.flows.describe("BatchOperationsTest", {
                     })
                 });
             })
+            })
         });
     },
 
     testBatchWithMountedDSUs: function () {
         this.createDSU((dsu) => {
-            dsu.getKeySSIAsString((err, keySSI) => {
+            dsu.getKeySSIAsString(async (err, keySSI) => {
                 if (err) {
                     throw err;
                 }
 
-                dsu.writeFile('/some/path.txt', 'text', (err) => {
+                await dsu.safeBeginBatchAsync();
+                dsu.writeFile('/some/path.txt', 'text', async (err) => {
                     if (err) {
                         throw err;
                     }
-
+                    await dsu.commitBatchAsync();
                     this.level1MountedDSU = dsu;
+                    await this.testDSU.safeBeginBatchAsync();
                     this.testDSU.mount('/level1', keySSI, (err) => {
                         if (err) {
                             throw err;
                         }
 
-                        this.testDSU.beginBatch();
                         this.testDSU.writeFile('/level1/file1.txt', text[0], (err) => {
                             if (err) {
                                 throw err;
@@ -240,15 +246,17 @@ $$.flows.describe("BatchOperationsTest", {
                     throw err;
                 }
 
-                this.level1MountedDSU.load((err) => {
+                this.level1MountedDSU.load(async (err) => {
                     if (err) {
                         throw err;
                     }
-                    this.level1MountedDSU.mount('/level2', keySSI, (err) => {
+
+                    await this.level1MountedDSU.safeBeginBatchAsync();
+                    this.level1MountedDSU.mount('/level2', keySSI, async (err) => {
                         if (err) {
                             throw err;
                         }
-
+                        await this.level1MountedDSU.commitBatchAsync();
                         testDSU.getKeySSIAsString((err, keySSI) => {
                             if (err) {
                                 throw err;

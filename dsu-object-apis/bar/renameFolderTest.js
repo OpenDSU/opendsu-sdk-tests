@@ -18,33 +18,35 @@ double_check.createTestFolder("bar_test_folder", (err, testFolder) => {
             const resolver = openDSU.loadApi("resolver");
             const keySSISpace = openDSU.loadApi("keyssi");
 
-            resolver.createDSU(keySSISpace.createTemplateSeedSSI("default"), (err, bar) => {
+            resolver.createDSU(keySSISpace.createTemplateSeedSSI("default"), async (err, bar) => {
                 if (err) {
                     throw err;
                 }
 
+                await bar.safeBeginBatchAsync();
                 bar.writeFile("/x/y/z/a.txt", fileData, (err, brickMapDigest) => {
                     if (err) {
                         throw err;
                     }
                     assert.true(err === null || typeof err === "undefined", "Failed to write file in BAR");
-                    assert.true(brickMapDigest !== null && typeof brickMapDigest !== "undefined", "Bar map digest is null or undefined");
 
-                    bar.writeFile('/x/y/b.txt', fileData, (err, brickMapDigest) => {
+                    bar.writeFile('/x/y/b.txt', fileData, async (err, brickMapDigest) => {
                         assert.true(err === null || typeof err === "undefined", "Failed to write second file in BAR");
-                        assert.true(brickMapDigest !== null && typeof brickMapDigest !== "undefined", "Bar map digest is null or undefined");
 
+                        await bar.commitBatchAsync();
                         bar.getKeySSIAsString((err, keySSI) => {
                             if (err) {
                                 throw err;
                             }
-                            resolver.loadDSU(keySSI, (err, newBar) => {
+                            resolver.loadDSU(keySSI, async (err, newBar) => {
                                 if (err) {
                                     throw err;
                                 }
-                                newBar.rename("/x/y", "/a", (err) => {
-                                    assert.true(err === null || typeof err === "undefined", "Failed to rename folder.");
 
+                                await newBar.safeBeginBatchAsync();
+                                newBar.rename("/x/y", "/a", async (err) => {
+                                    assert.true(err === null || typeof err === "undefined", "Failed to rename folder.");
+                                    await newBar.commitBatchAsync();
                                     newBar.readFile("/a/z/a.txt", (err, data) => {
                                         assert.true(err === null || typeof err === "undefined", "Failed read file from BAR.");
                                         assert.true(fileData === data.toString(), "Invalid read data");

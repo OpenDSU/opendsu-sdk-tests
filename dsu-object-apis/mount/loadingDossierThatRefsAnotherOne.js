@@ -16,16 +16,18 @@ assert.callback("Load a dossier that was a mount point to a dossier with constit
         const resolver = openDSU.loadApi("resolver");
         const keySSISpace = openDSU.loadApi("keyssi");
 
-        resolver.createDSU(keySSISpace.createTemplateSeedSSI("default"), (err, ref) => {
+        resolver.createDSU(keySSISpace.createTemplateSeedSSI("default"), async (err, ref) => {
             if (err) {
                 throw err;
             }
-            ref.addFolder("../../../psknode/bundles", "/", (err) => {
+
+            await ref.safeBeginBatchAsync();
+            ref.addFolder("../../../psknode/bundles", "/", async (err) => {
                 if (err) {
                     throw err;
                 }
 
-                resolver.createDSU(keySSISpace.createTemplateSeedSSI("default"), (err, raw_dossier) => {
+                resolver.createDSU(keySSISpace.createTemplateSeedSSI("default"),async (err, raw_dossier) => {
                     if (err) {
                         throw err;
                     }
@@ -36,21 +38,28 @@ assert.callback("Load a dossier that was a mount point to a dossier with constit
                         "\t\t}\n" +
                         "\t}\n" +
                         ");";
-                    ref.writeFile("domain.js", fileContent, function (err) {
+
+
+                    ref.writeFile("domain.js", fileContent, async function (err) {
                         if (err) {
                             throw err;
                         }
 
-                        ref.getKeySSIAsString((err, refKeySSI) => {
+                        await ref.commitBatchAsync();
+                        ref.getKeySSIAsString(async (err, refKeySSI) => {
                             if (err) {
                                 throw err;
                             }
+
+                            await raw_dossier.safeBeginBatchAsync();
                             raw_dossier.mount("/code/constitution", refKeySSI, (err) => {
                                 assert.true(typeof err === "undefined" || err === null);
-                                raw_dossier.writeFile("just_a_file", "fileContent", function (err) {
+                                raw_dossier.writeFile("just_a_file", "fileContent", async function (err) {
                                     if (err) {
                                         throw err;
                                     }
+
+                                    await raw_dossier.commitBatchAsync();
                                     raw_dossier.getKeySSIAsString((err, raw_dossierKeySSI) => {
                                         if (err) {
                                             throw err;

@@ -42,35 +42,40 @@ $$.flows.describe("AddRawFolder", {
             }
 
             this.bar = bar;
-            this.addFolder(folderPath, "fld1", (err, initialHash) => {
+            this.bar.safeBeginBatch(err => {
                 if (err) {
                     throw err;
                 }
-
-                this.bar.delete("/", (err) => {
+                this.addFolder(folderPath, "fld1", (err, initialHash) => {
                     if (err) {
                         throw err;
                     }
-                    this.addFolder(folderPath, "fld2", (err, controlHash) => {
+
+                    this.bar.delete("/", (err) => {
                         if (err) {
                             throw err;
                         }
-
-                        this.bar.getKeySSIAsString((err, seedSSI) => {
+                        this.addFolder(folderPath, "fld2", async (err, controlHash) => {
                             if (err) {
                                 throw err;
                             }
-                            resolver.loadDSU(seedSSI, (err, newBar) => {
+                            await bar.commitBatchAsync();
+                            this.bar.getKeySSIAsString((err, seedSSI) => {
                                 if (err) {
                                     throw err;
                                 }
-
-                                newBar.listFolders("/", (err, folders) => {
+                                resolver.loadDSU(seedSSI, (err, newBar) => {
                                     if (err) {
                                         throw err;
                                     }
-                                    assert.true(folders.length === 1);
-                                    this.callback();
+
+                                    newBar.listFolders("/", (err, folders) => {
+                                        if (err) {
+                                            throw err;
+                                        }
+                                        assert.true(folders.length === 1);
+                                        this.callback();
+                                    });
                                 });
                             });
                         });

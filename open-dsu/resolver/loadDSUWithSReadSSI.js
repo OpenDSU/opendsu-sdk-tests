@@ -15,16 +15,18 @@ assert.callback("Create and load DSU test", (callback) => {
             const keyssi = openDSU.loadApi("keyssi");
             const seedSSI = keyssi.createTemplateSeedSSI("default", undefined, undefined, "v0");
 
-            resolver.createDSU(seedSSI, (err, rawDossier) => {
+            resolver.createDSU(seedSSI, async (err, rawDossier) => {
                 if (err) {
                     throw err;
                 }
 
-                rawDossier.writeFile("/a.txt", "some data", (err) => {
+                await rawDossier.safeBeginBatchAsync();
+                rawDossier.writeFile("/a.txt", "some data", async (err) => {
                     if (err) {
                         throw err;
                     }
 
+                    await rawDossier.commitBatchAsync();
                     rawDossier.getKeySSIAsString("sread", (err, sreadSSI) => {
                         if (err) {
                             throw err;

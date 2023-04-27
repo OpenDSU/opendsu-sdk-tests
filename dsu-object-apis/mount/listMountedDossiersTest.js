@@ -49,11 +49,12 @@ assert.callback("List mounted dossiers test", (testFinishCallback) => {
                                     seed: anotherDossierKeySSI
                                 }, {path: "/temp/dossier1/folder", name: "dossier3", seed: yetAnotherDossierKeySSI}];
 
-                                resolver.createDSU(keySSISpace.createTemplateSeedSSI("default"), (err, raw_dossier) => {
+                                resolver.createDSU(keySSISpace.createTemplateSeedSSI("default"), async (err, raw_dossier) => {
                                     if (err) {
                                         throw err;
                                     }
 
+                                    await raw_dossier.safeBeginBatchAsync();
                                     raw_dossier.writeFile("testFile", "testContent", (err) => {
                                         if (err) {
                                             throw err;
@@ -61,12 +62,13 @@ assert.callback("List mounted dossiers test", (testFinishCallback) => {
 
                                         function __mount(index) {
                                             let mount = mountingPoints[index];
-                                            raw_dossier.mount(mount.path + "/" + mount.name, mount.seed, (err) => {
+                                            raw_dossier.mount(mount.path + "/" + mount.name, mount.seed, async (err) => {
                                                 if (err) {
                                                     throw err;
                                                 }
 
                                                 if (index === mountingPoints.length - 1) {
+                                                    await raw_dossier.commitBatchAsync();
                                                     startTest();
                                                 } else {
                                                     __mount(index + 1);

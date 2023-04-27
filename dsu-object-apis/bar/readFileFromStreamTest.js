@@ -29,7 +29,7 @@ $$.flows.describe('ReadFileFromStream', {
         const resolver = openDSU.loadApi("resolver");
         const keySSISpace = openDSU.loadApi("keyssi");
 
-        resolver.createDSU(keySSISpace.createTemplateSeedSSI("default"), (err, bar) => {
+        resolver.createDSU(keySSISpace.createTemplateSeedSSI("default"), async (err, bar) => {
             if (err) {
                 throw err;
             }
@@ -37,10 +37,11 @@ $$.flows.describe('ReadFileFromStream', {
             this.bar = bar;
             const buf = Buffer.alloc(1024 * 1024);
             expectedCrc = crc32.unsigned(buf);
-
-            this.bar.writeFile(barPath, buf, (err, data) => {
+            await this.bar.safeBeginBatchAsync();
+            this.bar.writeFile(barPath, buf, async (err, data) => {
                 assert.true(err === null || typeof err === "undefined", "Failed to write file.");
 
+                await this.bar.commitBatchAsync();
                 this.bar.getKeySSIAsString((err, keySSI) => {
                     if (err) {
                         throw err;

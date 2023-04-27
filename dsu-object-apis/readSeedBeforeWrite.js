@@ -15,13 +15,15 @@ assert.callback("We should be able to get a seed of a bar before finish writing?
             const resolver = openDSU.loadApi("resolver");
             const keySSISpace = openDSU.loadApi("keyssi");
 
-            resolver.createDSU(keySSISpace.createTemplateSeedSSI("default"), (err, bar) => {
+            resolver.createDSU(keySSISpace.createTemplateSeedSSI("default"), async (err, bar) => {
                 if (err) {
                     throw err;
                 }
-                bar.writeFile("just_a_path", "some_content", function (err) {
-                    assert.true(typeof err === "undefined");
 
+                await bar.safeBeginBatchAsync();
+                bar.writeFile("just_a_path", "some_content", async function (err) {
+                    assert.true(typeof err === "undefined");
+                    await bar.commitBatchAsync();
                     testFinishCallback();
                 });
             })

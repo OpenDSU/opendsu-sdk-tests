@@ -45,30 +45,36 @@ $$.flows.describe("RemoveFilesFromBar", {
     },
 
     addFolder: function () {
-        this.archive.addFolder(folderPath, "/", (err, mapDigest) => {
+        this.archive.safeBeginBatch(err => {
             if (err) {
                 throw err;
             }
-            assert.true(err === null || typeof err === "undefined", "Failed to add folder.");
-            this.listFiles((err, initialFiles) => {
+            this.archive.addFolder(folderPath, "/", (err, mapDigest) => {
                 if (err) {
                     throw err;
                 }
-
-                this.removeFile(initialFiles[0], (err) => {
+                assert.true(err === null || typeof err === "undefined", "Failed to add folder.");
+                this.listFiles((err, initialFiles) => {
                     if (err) {
                         throw err;
                     }
 
-                    this.listFiles((err, filesAfterRemoval) => {
+                    this.removeFile(initialFiles[0], async (err) => {
                         if (err) {
                             throw err;
                         }
 
-                        assert.arraysMatch(initialFiles.slice(1), filesAfterRemoval);
-                        this.callback();
+                        await this.archive.commitBatchAsync();
+                        this.listFiles((err, filesAfterRemoval) => {
+                            if (err) {
+                                throw err;
+                            }
+
+                            assert.arraysMatch(initialFiles.slice(1), filesAfterRemoval);
+                            this.callback();
+                        });
                     });
-                });
+                })
             });
         });
     },

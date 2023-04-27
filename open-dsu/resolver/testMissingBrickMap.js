@@ -42,22 +42,26 @@ assert.callback("Test what happens when a brickmap is missing", (finishTest) => 
                             throw err;
                         }
 
-                        dsu.getKeySSIAsObject((err, seed) => {
+                        dsu.getKeySSIAsObject(async (err, seed) => {
                             if (err) {
                                 throw err;
                             }
 
-                            dsu.writeFile("/test.txt", "just content", (err) => {
+                            await dsu.safeBeginBatchAsync()
+                            dsu.writeFile("/test.txt", "just content", async (err) => {
                                 console.log("Frist write was called!!!", new Date().getTime());
                                 if (err) {
                                     throw err;
                                 }
+                                await dsu.commitBatchAsync();
 
-                                dsu.writeFile("/secondfile.txt", "content that will be deleted from brick storage", (err) => {
+                                await dsu.safeBeginBatchAsync()
+                                dsu.writeFile("/secondfile.txt", "content that will be deleted from brick storage", async (err) => {
                                     if (err) {
                                         throw err;
                                     }
 
+                                    await dsu.commitBatchAsync();
                                     seed.getAnchorId((err, anchorId) => {
                                         if (err) {
                                             throw err;
@@ -72,7 +76,7 @@ assert.callback("Test what happens when a brickmap is missing", (finishTest) => 
                                                 fs.unlinkSync(brickFilePath);
                                             }
 
-                                            enclave.loadDSU(seed, {skipCache: true}, (err, dsu)=>{
+                                            enclave.loadDSU(seed, {skipCache: true}, (err, dsu) => {
                                                 console.log(err, dsu);
 
                                                 assert.equal(!!err, true);
