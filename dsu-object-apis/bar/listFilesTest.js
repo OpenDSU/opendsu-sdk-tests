@@ -13,7 +13,7 @@ const tir = require("../../../psknode/tests/util/tir.js");
 const text = ["first", "second", "third"];
 
 require("callflow").initialise();
-
+$$.LEGACY_BEHAVIOUR_ENABLED = true;
 $$.flows.describe("ListFilesTest", {
     start: function (callback) {
         this.callback = callback;

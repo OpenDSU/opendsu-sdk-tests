@@ -5,7 +5,7 @@ const double_check = require("double-check");
 const assert = double_check.assert;
 
 const tir = require("../../../psknode/tests/util/tir.js");
-
+$$.LEGACY_BEHAVIOUR_ENABLED = true;
 double_check.createTestFolder("delay_anchoring_test_folder", (err, testFolder) => {
     assert.true(err === null || typeof err === "undefined", "Failed to create test folder");
 

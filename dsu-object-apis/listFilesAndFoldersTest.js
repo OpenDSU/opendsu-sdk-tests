@@ -11,7 +11,7 @@ const subFolder = "secondLevelDir";
 const filename = "file.txt";
 
 require("callflow").initialise();
-
+$$.LEGACY_BEHAVIOUR_ENABLED = true;
 $$.flows.describe("TestFlow", {
     start: function (callback) {
         this.callback = callback;
