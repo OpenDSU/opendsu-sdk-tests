@@ -47,7 +47,7 @@ assert.callback("Create and load DSU test", (finishTest) => {
                                 throw err;
                             }
 
-                            await dsu.safeBeginBatchAsync()
+                            // await dsu.safeBeginBatchAsync()
                             dsu.writeFile("/test.txt", "just content", (err) => {
                                 console.log("Frist write was called!!!", new Date().getTime());
                                 if (err) {
@@ -59,7 +59,7 @@ assert.callback("Create and load DSU test", (finishTest) => {
                                         throw err;
                                     }
 
-                                    await dsu.commitBatchAsync();
+                                    // await dsu.commitBatchAsync();
                                     seed.getAnchorId((err, anchorId) => {
                                         if (err) {
                                             throw err;
@@ -79,19 +79,19 @@ assert.callback("Create and load DSU test", (finishTest) => {
                                                 if (dsu) {
                                                     dsu.restored = true;
 
-                                                    dsu.safeBeginBatch((err) => {
-                                                        if (err) {
-                                                            return callback(err);
-                                                        }
+                                                    // dsu.safeBeginBatch((err) => {
+                                                    //     if (err) {
+                                                    //         return callback(err);
+                                                    //     }
                                                         dsu.writeFile("/restoredFile.txt", "restored data", async (err) => {
                                                             if (err) {
                                                                 throw err;
                                                             }
 
-                                                            await dsu.commitBatchAsync();
+                                                            // await dsu.commitBatchAsync();
                                                             return callback(undefined, dsu);
                                                         });
-                                                    });
+                                                    // });
                                                 }
                                             };
 
