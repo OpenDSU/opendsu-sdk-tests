@@ -17,6 +17,7 @@ let tempFolder;
 const text = ["first text", "second fragment", "third"];
 
 require("callflow").initialise();
+$$.LEGACY_BEHAVIOUR_ENABLED = true;
 
 $$.flows.describe("AddFile", {
     start: function (callback) {

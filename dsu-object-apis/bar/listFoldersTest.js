@@ -11,7 +11,7 @@ let files;
 const tir = require("../../../psknode/tests/util/tir.js");
 
 const text = ["first", "second", "third"];
-
+$$.LEGACY_BEHAVIOUR_ENABLED = true;
 require("callflow").initialise();
 $$.LEGACY_BEHAVIOUR_ENABLED = true;
 $$.flows.describe("ListFoldersTest", {

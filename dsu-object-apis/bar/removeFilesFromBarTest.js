@@ -11,6 +11,7 @@ let files;
 const text = ["first", "second", "third"];
 
 require("callflow").initialise();
+$$.LEGACY_BEHAVIOUR_ENABLED = true;
 
 $$.flows.describe("RemoveFilesFromBar", {
     start: function (callback) {

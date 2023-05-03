@@ -9,7 +9,7 @@ const tir = require("../../../psknode/tests/util/tir");
 const double_check = require("double-check");
 const assert = double_check.assert;
 const constants = require("opendsu").constants;
-
+$$.LEGACY_BEHAVIOUR_ENABLED = true;
 function getBrickStorageFolder(folder) {
     return path.join(folder, "external-volume/domains/default/brick-storage");
 }
