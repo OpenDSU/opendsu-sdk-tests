@@ -1,5 +1,4 @@
 require("../../psknode/bundles/testsRuntime");
-require("../../psknode/bundles/pskruntime");
 
 const tir = require("../../psknode/tests/util/tir");
 const double_check = require("double-check");

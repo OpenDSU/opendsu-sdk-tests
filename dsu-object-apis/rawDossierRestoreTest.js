@@ -1,5 +1,4 @@
 require("../../psknode/bundles/testsRuntime");
-require("../../psknode/bundles/pskruntime");
 
 const tir = require("../../psknode/tests/util/tir");
 const double_check = require("double-check");
@@ -34,7 +33,7 @@ assert.callback("rawDossier restore test", (testFinishCallback) => {
                             if (err) {
                                 throw err;
                             }
-                            ref2.readFile("/constitution/pskruntime.js", function (err, content) {
+                            ref2.readFile("/constitution/testsRuntime.js", function (err, content) {
                                 if (err) {
                                     throw err;
                                 }
