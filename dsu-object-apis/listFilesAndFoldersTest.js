@@ -10,9 +10,10 @@ const rootFolderName = "firsLevelDir";
 const subFolder = "secondLevelDir";
 const filename = "file.txt";
 
-require("callflow").initialise();
+// require("callflow").initialise();
 $$.LEGACY_BEHAVIOUR_ENABLED = true;
-$$.flows.describe("TestFlow", {
+// $$.flows.describe("TestFlow", {
+let listFilesAndFoldersTest = {
     start: function (callback) {
         this.callback = callback;
         double_check.createTestFolder('AddFilesBatch', async (err, folder) => {
@@ -75,12 +76,13 @@ $$.flows.describe("TestFlow", {
             this.callback();
         });
     }
-});
+};
 
 double_check.createTestFolder("bar_test_folder", (err, testFolder) => {
 
     assert.callback("List files and folders from RawDossier test", (callback) => {
-            $$.flows.start("TestFlow", "start", callback);
+            // $$.flows.start("TestFlow", "start", callback);
+            listFilesAndFoldersTest.start(callback);
         }, 6000
     );
 });

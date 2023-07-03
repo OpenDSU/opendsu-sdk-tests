@@ -13,9 +13,10 @@ const tir = require("../../../psknode/tests/util/tir.js");
 
 const text = ["first", "second", "third"];
 
-require("callflow").initialise();
+// require("callflow").initialise();
 $$.LEGACY_BEHAVIOUR_ENABLED = true;
-$$.flows.describe("AddRawFile", {
+// $$.flows.describe("AddRawFile", {
+let addRawFileTest = {
     start: function (callback) {
         this.callback = callback;
 
@@ -74,7 +75,7 @@ $$.flows.describe("AddRawFile", {
     addFile: function (fsFilePath, barPath, callback) {
         this.bar.addFile(fsFilePath, barPath, {encrypt: false}, callback);
     }
-});
+};
 
 double_check.createTestFolder("bar_test_folder", (err, testFolder) => {
     const path = require("path");
@@ -83,6 +84,7 @@ double_check.createTestFolder("bar_test_folder", (err, testFolder) => {
     filePath = path.join(testFolder, "fld/a.txt");
     extractionPath = path.join(testFolder, "test.txt");
     assert.callback("Add raw file to bar test", (callback) => {
-        $$.flows.start("AddRawFile", "start", callback);
+        // $$.flows.start("AddRawFile", "start", callback);
+        addRawFileTest.start(callback);
     }, 3000);
 });

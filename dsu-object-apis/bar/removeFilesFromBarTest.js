@@ -10,10 +10,11 @@ let files;
 
 const text = ["first", "second", "third"];
 
-require("callflow").initialise();
+// require("callflow").initialise();
 $$.LEGACY_BEHAVIOUR_ENABLED = true;
 
-$$.flows.describe("RemoveFilesFromBar", {
+// $$.flows.describe("RemoveFilesFromBar", {
+let removeFilesFromBarTest = {
     start: function (callback) {
         this.callback = callback;
         double_check.ensureFilesExist([folderPath], files, text, (err) => {
@@ -87,7 +88,7 @@ $$.flows.describe("RemoveFilesFromBar", {
     removeFile: function (file, callback) {
         this.archive.delete(file, callback);
     }
-});
+};
 
 double_check.createTestFolder("bar_test_folder", (err, testFolder) => {
 
@@ -96,7 +97,8 @@ double_check.createTestFolder("bar_test_folder", (err, testFolder) => {
     files = ["fld/a.txt", "fld/b.txt", "fld/c.txt"].map(file => path.join(testFolder, file));
 
     assert.callback("Remove files from bar test", (callback) => {
-            $$.flows.start("RemoveFilesFromBar", "start", callback);
+            // $$.flows.start("RemoveFilesFromBar", "start", callback);
+            removeFilesFromBarTest.start(callback);
         }, 6000
     );
 });

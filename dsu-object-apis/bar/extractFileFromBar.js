@@ -16,10 +16,11 @@ let tempFolder;
 
 const text = ["first text", "second fragment", "third"];
 
-require("callflow").initialise();
+// require("callflow").initialise();
 $$.LEGACY_BEHAVIOUR_ENABLED = true;
 
-$$.flows.describe("AddFile", {
+// $$.flows.describe("AddFile", {
+let extractFileFromBarTest = {
     start: function (callback) {
         this.callback = callback;
 
@@ -107,7 +108,7 @@ $$.flows.describe("AddFile", {
             });
         })
     }
-});
+};
 
 double_check.createTestFolder("Extract file from bar", (err, testFolder) => {
     tempFolder = path.join(testFolder, "tmp");
@@ -116,6 +117,7 @@ double_check.createTestFolder("Extract file from bar", (err, testFolder) => {
     folders = [folderPath];
     filePath = path.join(testFolder, "fld", "a.txt");
     assert.callback("AddFileEDFSTest", (callback) => {
-        $$.flows.start("AddFile", "start", callback);
+        // $$.flows.start("AddFile", "start", callback);
+        extractFileFromBarTest.start(callback);
     }, 10000);
 });

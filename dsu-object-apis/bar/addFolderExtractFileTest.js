@@ -12,9 +12,10 @@ const tir = require("../../../psknode/tests/util/tir.js");
 
 const text = ["first", "second", "third"];
 
-require("callflow").initialise();
+// require("callflow").initialise();
 
-$$.flows.describe("AddFolderToCSB", {
+// $$.flows.describe("AddFolderToCSB", {
+let addFolderExtractFilesTest = {
     start: function (callback) {
         this.callback = callback;
         double_check.ensureFilesExist([folderPath], files, text, (err) => {
@@ -68,7 +69,7 @@ $$.flows.describe("AddFolderToCSB", {
             this.callback();
         });
     }
-});
+};
 
 double_check.createTestFolder("bar_test_folder", (err, testFolder) => {
     const path = require("path");
@@ -76,6 +77,7 @@ double_check.createTestFolder("bar_test_folder", (err, testFolder) => {
     files = ["fld/a.txt", "fld/b.txt", "fld/c.txt"].map(file => path.join(testFolder, file));
     filePath = path.join(testFolder, "test.txt");
     assert.callback("Add folder to CSB test", (callback) => {
-        $$.flows.start("AddFolderToCSB", "start", callback);
+        // $$.flows.start("AddFolderToCSB", "start", callback);
+        addFolderExtractFilesTest.start(callback);
     }, 3000);
 });

@@ -13,9 +13,10 @@ const tir = require("../../../psknode/tests/util/tir.js");
 
 const text = ["first", "second", "third"];
 
-require("callflow").initialise();
+// require("callflow").initialise();
 $$.LEGACY_BEHAVIOUR_ENABLED = true;
-$$.flows.describe("AddFilesBatch", {
+// $$.flows.describe("AddFilesBatch", {
+let addFilesBatchTest = {
     start: function (callback) {
         this.callback = callback;
 
@@ -82,7 +83,7 @@ $$.flows.describe("AddFilesBatch", {
             })
         });
     }
-});
+};
 
 double_check.createTestFolder("bar_test_folder", (err, testFolder) => {
     const path = require("path");
@@ -90,6 +91,7 @@ double_check.createTestFolder("bar_test_folder", (err, testFolder) => {
     files = ["fld/a.txt", "fld/b.txt", "fld/c.txt"].map(file => path.join(testFolder, file));
     filePath = path.join(testFolder, "test.txt");
     assert.callback("Add files (embedded: true) to bar test", (callback) => {
-        $$.flows.start("AddFilesBatch", "start", callback);
+        // $$.flows.start("AddFilesBatch", "start", callback);
+        addFilesBatchTest.start(callback);
     }, 3000000);
 });
