@@ -11,9 +11,7 @@ const barPath = '/big-file.big';
 
 const tir = require("../../../psknode/tests/util/tir.js");
 
-require("callflow").initialise();
-
-$$.flows.describe('WriteFileFromStream', {
+let writeFileFromStreamTest = {
     start: function (callback) {
         this.callback = callback;
         double_check.createTestFolder('AddFilesBatch', async (err, folder) => {
@@ -68,7 +66,7 @@ $$.flows.describe('WriteFileFromStream', {
             });
         });
     }
-});
+};
 
 double_check.createTestFolder("bar_test_folder", (err, testFolder) => {
     const path = require("path");
@@ -82,7 +80,7 @@ double_check.createTestFolder("bar_test_folder", (err, testFolder) => {
     stream.write(buf);
     stream.on('finish', () => {
         assert.callback("Write file from stream test", (callback) => {
-            $$.flows.start("WriteFileFromStream", "start", callback);
+            writeFileFromStreamTest.start(callback);
         }, 3000);
     });
     stream.end();

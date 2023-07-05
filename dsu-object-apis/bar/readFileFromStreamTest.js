@@ -9,10 +9,7 @@ const barPath = '/big-file.big';
 
 const tir = require("../../../psknode/tests/util/tir.js");
 
-require("callflow").initialise();
-
-$$.flows.describe('ReadFileFromStream', {
-
+let readFileFromStreamTest = {
     start: function (callback) {
         this.callback = callback;
         double_check.createTestFolder('AddFilesBatch', async (err, folder) => {
@@ -79,10 +76,10 @@ $$.flows.describe('ReadFileFromStream', {
         })
 
     }
-});
+};
 
 double_check.createTestFolder("bar_test_folder", (err, testFolder) => {
     assert.callback("Read file from stream test", (callback) => {
-        $$.flows.start("ReadFileFromStream", "start", callback);
+        readFileFromStreamTest.start(callback);
     }, 3000);
 });
