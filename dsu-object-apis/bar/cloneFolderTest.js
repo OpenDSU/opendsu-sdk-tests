@@ -6,9 +6,6 @@ const openDSU = require("opendsu");
 
 const tir = require("../../../psknode/tests/util/tir.js");
 
-// require("callflow").initialise();
-
-// $$.flows.describe("CloneFolder", {
 let cloneFolderTest = {
     start: function (callback) {
         this.callback = callback;
@@ -112,6 +109,5 @@ let cloneFolderTest = {
 };
 
 assert.callback("Clone folder test", (callback) => {
-    // $$.flows.start("CloneFolder", "start", callback);
     cloneFolderTest.start(callback);
 }, 3000);

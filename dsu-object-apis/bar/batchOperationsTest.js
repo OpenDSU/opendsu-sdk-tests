@@ -11,9 +11,6 @@ let files;
 const tir = require("../../../psknode/tests/util/tir.js");
 const text = ["first", "second", "third"];
 
-// require("callflow").initialise();
-
-// $$.flows.describe("BatchOperationsTest", {
 let batchOperationsTest = {
     start: function (callback) {
         this.callback = callback;
@@ -376,7 +373,6 @@ double_check.createTestFolder("batch_op_test_folder", (err, testFolder) => {
     files = ["fld/a.txt", "fld/b.txt", "fld/c.txt"].map(file => path.join(testFolder, file));
     filePath = path.join(testFolder, "test.txt");
     assert.callback("Batch operations", (callback) => {
-        // $$.flows.start("BatchOperationsTest", "start", callback);
         batchOperationsTest.start(callback);
         //}, 3000 * 1000);
     }, 3000);

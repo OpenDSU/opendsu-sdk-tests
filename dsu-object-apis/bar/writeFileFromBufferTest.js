@@ -10,9 +10,6 @@ const barPath = '/big-file.big';
 
 const tir = require("../../../psknode/tests/util/tir.js");
 
-// require("callflow").initialise();
-
-// $$.flows.describe('WriteFileFromBuffer', {
 let writeFileFromBufferTest = {
     start: function (callback) {
         this.callback = callback;
@@ -72,7 +69,6 @@ let writeFileFromBufferTest = {
 
 double_check.createTestFolder("bar_test_folder", (err, testFolder) => {
     assert.callback("Write file from buffer test", (callback) => {
-        // $$.flows.start("WriteFileFromBuffer", "start", callback);
         writeFileFromBufferTest.start(callback);
     }, 3000);
 });

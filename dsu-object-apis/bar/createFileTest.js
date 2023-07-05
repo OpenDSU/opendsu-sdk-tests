@@ -4,12 +4,10 @@ const double_check = require("double-check");
 const assert = double_check.assert;
 
 const tir = require("../../../psknode/tests/util/tir.js");
-// require("callflow").initialise();
 const openDSU = require("opendsu");
 const resolver = openDSU.loadApi("resolver");
 const keySSISpace = openDSU.loadApi("keyssi");
 
-// $$.flows.describe("CreateEmptyFile", {
 let createEmptyFileTest = {
     start: function (callback) {
         this.callback = callback;
@@ -108,7 +106,6 @@ let createEmptyFileTest = {
 
 double_check.createTestFolder("bar_test_folder", (err, testFolder) => {
     assert.callback("Create empty file test", (callback) => {
-        // $$.flows.start("CreateEmptyFile", "start", callback);
         createEmptyFileTest.start(callback);
     }, 3000);
 });

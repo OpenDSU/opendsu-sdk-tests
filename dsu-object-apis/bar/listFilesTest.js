@@ -12,9 +12,8 @@ const tir = require("../../../psknode/tests/util/tir.js");
 
 const text = ["first", "second", "third"];
 
-// require("callflow").initialise();
 $$.LEGACY_BEHAVIOUR_ENABLED = true;
-// $$.flows.describe("ListFilesTest", {
+
 let listFilesTest = {
     start: function (callback) {
         this.callback = callback;
@@ -175,7 +174,6 @@ double_check.createTestFolder("list_files_test_folder", (err, testFolder) => {
     files = ["fld/a.txt", "fld/b.txt", "fld/c.txt"].map(file => path.join(testFolder, file));
     filePath = path.join(testFolder, "test.txt");
     assert.callback("List files", (callback) => {
-        // $$.flows.start("ListFilesTest", "start", callback);
         listFilesTest.start(callback);
     }, 3000);
 });

@@ -16,10 +16,8 @@ let tempFolder;
 
 const text = ["first text", "second fragment", "third"];
 
-// require("callflow").initialise();
 $$.LEGACY_BEHAVIOUR_ENABLED = true;
 
-// $$.flows.describe("AddFile", {
 let extractFileFromBarTest = {
     start: function (callback) {
         this.callback = callback;
@@ -117,7 +115,6 @@ double_check.createTestFolder("Extract file from bar", (err, testFolder) => {
     folders = [folderPath];
     filePath = path.join(testFolder, "fld", "a.txt");
     assert.callback("AddFileEDFSTest", (callback) => {
-        // $$.flows.start("AddFile", "start", callback);
         extractFileFromBarTest.start(callback);
     }, 10000);
 });
