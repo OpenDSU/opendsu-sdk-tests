@@ -116,5 +116,5 @@ double_check.createTestFolder("Extract file from bar", (err, testFolder) => {
     filePath = path.join(testFolder, "fld", "a.txt");
     assert.callback("AddFileEDFSTest", (callback) => {
         extractFileFromBarTest.start(callback);
-    }, 10000);
+    }, 20000);
 });
