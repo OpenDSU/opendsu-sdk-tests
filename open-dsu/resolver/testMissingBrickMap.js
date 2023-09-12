@@ -3,7 +3,7 @@ process.env.DEV = true;
 const path = require("path");
 const fs = require("fs");
 
-require("../../../psknode/bundles/testsRuntime");
+require("../../../builds/output/testsRuntime");
 
 const tir = require("../../../psknode/tests/util/tir");
 const double_check = require("double-check");

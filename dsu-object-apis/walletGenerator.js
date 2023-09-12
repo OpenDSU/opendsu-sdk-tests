@@ -1,4 +1,4 @@
-require("../../psknode/bundles/testsRuntime");
+require("../../builds/output/testsRuntime");
 
 const tir = require("../../psknode/tests/util/tir");
 const dc = require("double-check");
@@ -32,7 +32,7 @@ function generateWallet(webappFolder, callback) {
         }
 
         await walletTemplate.safeBeginBatchAsync();
-        walletTemplate.addFolder("../../psknode/bundles", "/", async (err) => {
+        walletTemplate.addFolder("../../builds/output", "/", async (err) => {
             if (err) {
                 throw err;
             }

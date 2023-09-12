@@ -1,4 +1,4 @@
-require('../../../psknode/bundles/testsRuntime');
+require('../../../builds/output/testsRuntime');
 
 const fs = require('fs');
 const double_check = require("double-check");

@@ -1,4 +1,4 @@
-require("../../../psknode/bundles/testsRuntime");
+require("../../../builds/output/testsRuntime");
 
 const tir = require("../../../psknode/tests/util/tir");
 const double_check = require("double-check");
@@ -22,7 +22,7 @@ assert.callback("Load a dossier that was a mount point to a dossier with constit
             }
 
             await ref.safeBeginBatchAsync();
-            ref.addFolder("../../../psknode/bundles", "/", async (err) => {
+            ref.addFolder("../../../builds/output", "/", async (err) => {
                 if (err) {
                     throw err;
                 }

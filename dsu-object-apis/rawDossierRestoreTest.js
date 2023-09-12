@@ -1,4 +1,4 @@
-require("../../psknode/bundles/testsRuntime");
+require("../../builds/output/testsRuntime");
 
 const tir = require("../../psknode/tests/util/tir");
 const double_check = require("double-check");
@@ -19,7 +19,7 @@ assert.callback("rawDossier restore test", (testFinishCallback) => {
                 }
 
                 await ref.safeBeginBatchAsync();
-                ref.addFolder("../../psknode/bundles", "/constitution", async (err) => {
+                ref.addFolder("../../builds/output", "/constitution", async (err) => {
                     if (err) {
                         throw err;
                     }
