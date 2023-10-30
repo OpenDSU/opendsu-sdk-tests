@@ -16,7 +16,6 @@ let tempFolder;
 
 const text = ["first text", "second fragment", "third"];
 
-$$.LEGACY_BEHAVIOUR_ENABLED = true;
 
 let extractFileFromBarTest = {
     start: function (callback) {
@@ -108,7 +107,7 @@ let extractFileFromBarTest = {
     }
 };
 
-double_check.createTestFolder("Extract file from bar", (err, testFolder) => {
+double_check.createTestFolder("extract", (err, testFolder) => {
     tempFolder = path.join(testFolder, "tmp");
     folderPath = path.join(testFolder, "fld");
     barPath = "myFile";
