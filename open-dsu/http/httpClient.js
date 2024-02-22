@@ -40,7 +40,7 @@ assert.callback('HTTP test', (callback) => {
                         assert.true(responseMultiple.ok === true);
 
                         responseMultiple.arrayBuffer().then(data => {
-                            const responseString = data.toString();
+                            const responseString = Buffer.from(data).toString();
 
                             assert.true(typeof responseString === 'string');
                             assert.true(responseString.includes('test'));
