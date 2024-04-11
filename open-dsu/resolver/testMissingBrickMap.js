@@ -15,7 +15,7 @@ function getBrickStorageFolder(folder) {
 }
 
 function getBrickFilePath(folder, hashLink) {
-    let brickFolderName = hashLink.slice(0, 5);
+    let brickFolderName = hashLink.slice(0, 2);
     return path.join(getBrickStorageFolder(folder), brickFolderName, hashLink);
 }
 
@@ -26,7 +26,6 @@ assert.callback("Test what happens when a brickmap is missing", (finishTest) => 
                 throw err;
             }
             const openDSU = require("opendsu");
-            const EnclaveAPI = openDSU.loadApi("enclave");
             const anchoring = openDSU.loadApi("anchoring");
             const sc = openDSU.loadApi("sc");
             const anchoringX = anchoring.getAnchoringX();

@@ -15,7 +15,7 @@ function getBrickStorageFolder(folder) {
 }
 
 function getBrickFilePath(folder, hashLink) {
-    let brickFolderName = hashLink.slice(0, 5);
+    let brickFolderName = hashLink.slice(0, 2);
     return path.join(getBrickStorageFolder(folder), brickFolderName, hashLink);
 }
 

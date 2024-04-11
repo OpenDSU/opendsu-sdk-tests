@@ -15,7 +15,7 @@ function getBrickStorageFolder(folder) {
 }
 
 function getBrickFilePath(folder, hashLink) {
-    let brickFolderName = hashLink.slice(0, 5);
+    let brickFolderName = hashLink.slice(0, 2);
     let targetPath = path.join(getBrickStorageFolder(folder), brickFolderName, hashLink);
     console.log(targetPath);
     return targetPath;
@@ -49,7 +49,6 @@ assert.callback("Create and load Const DSU test", (finishTest) => {
                 throw err;
             }
             const openDSU = require("opendsu");
-            const EnclaveAPI = openDSU.loadApi("enclave");
             const keySSIApi = openDSU.loadApi("keyssi");
             const anchoring = openDSU.loadApi("anchoring");
             const resolver = openDSU.loadApi("resolver");
@@ -70,7 +69,7 @@ assert.callback("Create and load Const DSU test", (finishTest) => {
                                 throw err;
                             }
 
-                            createDSU(enclave, (err, {seed, dsu})=>{
+                            createDSU(enclave, (err, {seed})=>{
                                 if (err) {
                                     throw err;
                                 }
