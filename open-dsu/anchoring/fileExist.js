@@ -1,13 +1,10 @@
 require('../../../builds/output/testsRuntime');
 
-const tir = require('../../../psknode/tests/util/tir');
 const double_check = require("double-check");
 const assert = double_check.assert;
 
 const path = require("path");
 const fs = require("fs");
-
-
 
 
 assert.callback('Testing fs stat functionality that is used in anchoring component', (finish) => {
@@ -26,11 +23,11 @@ assert.callback('Testing fs stat functionality that is used in anchoring compone
             });
         }
 
-        if(err){
+        if (err) {
             throw err;
         }
 
-        fileExist("anchorName", (err, result)=>{
+        fileExist("anchorName", (err, result) => {
             assert.true(typeof err === "undefined", "We should not get error if file doesn't exist");
             assert.false(result, "result should be false");
 

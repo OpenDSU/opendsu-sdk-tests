@@ -8,7 +8,7 @@ assert.callback("Wallet generator", (testFinishCallback) => {
     dc.createTestFolder("wallet", function (err, folder) {
         const no_retries = 10;
         console.log("Incerc sa lansez vmq");
-        tir.launchVirtualMQNode(no_retries, folder, function (err, port) {
+        tir.launchVirtualMQNode(no_retries, folder, function (err) {
             if (err) {
                 throw err;
             }

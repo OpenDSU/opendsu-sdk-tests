@@ -14,14 +14,16 @@ assert.callback("AddFileEDFSTest", (callback) => {
                 "option": {}
             }
         }
-        await tir.launchConfigurableApiHubTestNodeAsync({domains: [{name: "vault", config: vaultDomainConfig}], rootFolder: testFolder});
+        await tir.launchConfigurableApiHubTestNodeAsync({
+            domains: [{name: "vault", config: vaultDomainConfig}],
+            rootFolder: testFolder
+        });
         const fs = require("fs");
         const folderPath = path.join(testFolder, "bar");
         fs.mkdirSync(folderPath, {recursive: true});
         const fileContent = "some text";
         const openDSU = require("opendsu");
         const resolver = openDSU.loadAPI("resolver");
-        const keySSISpace = openDSU.loadAPI("keyssi");
         const filePath = "/file.txt";
         const dsuInstance = await $$.promisify(resolver.createSeedDSU)("vault");
         const batchId = await dsuInstance.startOrAttachBatchAsync();

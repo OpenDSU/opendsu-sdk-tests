@@ -36,11 +36,11 @@ let cloneFolderTest = {
             if (err) {
                 throw err;
             }
-            dsu.writeFile("fld/file1", "some_data", (err, result) => {
+            dsu.writeFile("fld/file1", "some_data", (err) => {
                 if (err) {
                     throw err;
                 }
-                dsu.writeFile("fld/file2", "some_other_data", (err, result) => {
+                dsu.writeFile("fld/file2", "some_other_data", (err) => {
                     if (err) {
                         throw err;
                     }

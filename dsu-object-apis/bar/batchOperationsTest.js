@@ -4,8 +4,6 @@ const double_check = require("double-check");
 const assert = double_check.assert;
 
 let folderPath;
-let filePath;
-
 let files;
 
 const tir = require("../../../psknode/tests/util/tir.js");
@@ -48,45 +46,45 @@ let batchOperationsTest = {
     testBatchIsCommited: function (dsu) {
         this.testDSU = dsu;
         this.testDSU.safeBeginBatch((err) => {
-            if(err){
-                throw err;
-            }
-
-        this.testDSU.writeFile('f1.txt', text[0], (err) => {
             if (err) {
                 throw err;
             }
 
-            this.testDSU.hasUnanchoredChanges((err, status) => {
-                assert.true(status);
-                this.testDSU.writeFile('f2.txt', text[1], (err) => {
-                    if (err) {
-                        throw err;
-                    }
-                    this.testDSU.hasUnanchoredChanges((err, status) => {
-                        assert.true(status);
-                        this.testDSU.addFolder(folderPath, 'fld', (err) => {
-                            if (err) {
-                                throw err;
-                            }
-                            this.testDSU.hasUnanchoredChanges((err, status) => {
-                                assert.true(status);
+            this.testDSU.writeFile('f1.txt', text[0], (err) => {
+                if (err) {
+                    throw err;
+                }
 
-                                this.testDSU.commitBatch((err, result) => {
-                                    if (err) {
-                                        throw err;
-                                    }
-                                    this.testDSU.hasUnanchoredChanges((err, status) => {
-                                        assert.false(status);
+                this.testDSU.hasUnanchoredChanges((err, status) => {
+                    assert.true(status);
+                    this.testDSU.writeFile('f2.txt', text[1], (err) => {
+                        if (err) {
+                            throw err;
+                        }
+                        this.testDSU.hasUnanchoredChanges((err, status) => {
+                            assert.true(status);
+                            this.testDSU.addFolder(folderPath, 'fld', (err) => {
+                                if (err) {
+                                    throw err;
+                                }
+                                this.testDSU.hasUnanchoredChanges((err, status) => {
+                                    assert.true(status);
 
-                                        this.testBatchWithMountedDSUs();
-                                    });
-                                })
-                            });
+                                    this.testDSU.commitBatch((err) => {
+                                        if (err) {
+                                            throw err;
+                                        }
+                                        this.testDSU.hasUnanchoredChanges((err, status) => {
+                                            assert.false(status);
+
+                                            this.testBatchWithMountedDSUs();
+                                        });
+                                    })
+                                });
+                            })
                         })
-                    })
-                });
-            })
+                    });
+                })
             })
         });
     },
@@ -132,7 +130,7 @@ let batchOperationsTest = {
                                             this.testDSU.hasUnanchoredChanges((err, status) => {
                                                 assert.true(status);
 
-                                                this.testDSU.commitBatch((err, result) => {
+                                                this.testDSU.commitBatch((err) => {
                                                     if (err) {
                                                         throw err;
                                                     }
@@ -285,7 +283,7 @@ let batchOperationsTest = {
                                         });
                                     })
 
-                                }, (err, result) => {
+                                }, (err) => {
                                     if (err) {
                                         throw err;
                                     }
@@ -371,7 +369,6 @@ double_check.createTestFolder("batch_op_test_folder", (err, testFolder) => {
     const path = require("path");
     folderPath = path.join(testFolder, "fld");
     files = ["fld/a.txt", "fld/b.txt", "fld/c.txt"].map(file => path.join(testFolder, file));
-    filePath = path.join(testFolder, "test.txt");
     assert.callback("Batch operations", (callback) => {
         batchOperationsTest.start(callback);
         //}, 3000 * 1000);

@@ -12,7 +12,7 @@ double_check.createTestFolder("bar_test_folder", (err, testFolder) => {
     const fileData = "Lorem Ipsum is simply dummy text";
 
     assert.callback("RenameFileFunctionality", (callback) => {
-        tir.launchVirtualMQNode(10, testFolder, (err, port) => {
+        tir.launchVirtualMQNode(10, testFolder, (err) => {
             assert.true(err === null || typeof err === "undefined", "Failed to create server");
 
             const openDSU = require("opendsu");
@@ -25,7 +25,7 @@ double_check.createTestFolder("bar_test_folder", (err, testFolder) => {
                 }
 
                 await bar.safeBeginBatchAsync();
-                bar.writeFile("/x/y/z/a.txt", fileData, async (err, brickMapDigest) => {
+                bar.writeFile("/x/y/z/a.txt", fileData, async (err) => {
                     if (err) {
                         throw err;
                     }
@@ -51,7 +51,7 @@ double_check.createTestFolder("bar_test_folder", (err, testFolder) => {
                                     assert.true(err === null || typeof err === "undefined", "Failed read file from BAR.");
                                     assert.true(fileData === data.toString(), "Invalid read data");
 
-                                    newBar.readFile('/x/y/z/a.txt', (err, data) => {
+                                    newBar.readFile('/x/y/z/a.txt', (err) => {
                                         assert.true(err !== null && typeof err !== "undefined", "Source file should still exists.");
                                         callback();
                                     })

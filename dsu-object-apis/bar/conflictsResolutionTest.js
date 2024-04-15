@@ -30,7 +30,7 @@ double_check.createTestFolder("conflictsresolution_test_folder", (err, testFolde
         let thirdDSUKeySSI;
 
         // Bootstrap test
-        tir.launchVirtualMQNode(10, testFolder, async (err, port) => {
+        tir.launchVirtualMQNode(10, testFolder, async (err) => {
             assert.true(err === null || typeof err === "undefined", "Failed to create server");
 
             // Create DSUs
@@ -199,7 +199,7 @@ double_check.createTestFolder("conflictsresolution_test_folder", (err, testFolde
          * Test that renaming a file which has been freshly deleted
          * results in a conflict error
          */
-        const testRemoteDeleteConflict  = async () => {
+        const testRemoteDeleteConflict = async () => {
             let [user1DSU, user2DSU] = await loadDSUAsMultipleUsers(mainDSUKeySSI);
 
             await user1DSU.delete('m5.txt');
@@ -236,7 +236,7 @@ double_check.createTestFolder("conflictsresolution_test_folder", (err, testFolde
          * Test that renaming a file with the destination the same
          * as a freshly anchored file results in conflict error
          */
-        const testOvewriteFileConflictWhenRenamingFile  = async () => {
+        const testOvewriteFileConflictWhenRenamingFile = async () => {
             let [user1DSU, user2DSU] = await loadDSUAsMultipleUsers(mainDSUKeySSI);
 
             await user1DSU.writeFile('m6.txt', 'm6.txt content');

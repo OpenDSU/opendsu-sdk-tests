@@ -8,7 +8,7 @@ const fs = require("fs");
 assert.callback("Wallet generator", (testFinishCallback) => {
     dc.createTestFolder("wallet", function (err, folder) {
         const no_retries = 10;
-        tir.launchVirtualMQNode(no_retries, folder, function (err, port) {
+        tir.launchVirtualMQNode(no_retries, folder, function (err) {
             if (err) {
                 throw err;
             }
@@ -59,9 +59,9 @@ function generateWallet(webappFolder, callback) {
                             }
 
                             await wallet.commitBatchAsync();
-                            wallet.readFile("/app/index.html", function (err, content) {
+                            wallet.readFile("/app/index.html", function (err) {
                                 if (err) {
-                                    throw  err;
+                                    throw err;
                                 }
 
                                 callback();

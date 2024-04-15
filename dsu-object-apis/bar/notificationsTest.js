@@ -380,7 +380,7 @@ double_check.createTestFolder("notifications_test_folder", (err, testFolder) => 
             let errorHandlerCalled = false;
             await subscriberDSU.enableAutoSync(true, {
                 ignoreMounts: false,
-                onError: (err) => {
+                onError: () => {
                     errorHandlerCalled = true;
                 },
                 onSync: () => {
@@ -412,7 +412,7 @@ double_check.createTestFolder("notifications_test_folder", (err, testFolder) => 
             assert.true(JSON.stringify(expectedFiles) === JSON.stringify(actualFiles), 'Subscribed DSU should have the same files');
             assert.true(actualFiles.indexOf('level1/level2/level2-file-for-subscriber.txt') !== -1, "Level2 file exists")
             assert.true(actualFiles.indexOf('level1/level1-file-for-subscriber.txt') !== -1, "Level1 file exists")
-            assert.true(actualFiles.indexOf('level0-file-for-subscriber.txt') !== -0, "Level0 file exists")
+            assert.true(actualFiles.indexOf('level0-file-for-subscriber.txt') !== -1, "Level0 file exists")
         }
 
         const testSubscriberWithMountedPathsAutoUpdatesInBatchMode = async () => {
@@ -472,7 +472,7 @@ double_check.createTestFolder("notifications_test_folder", (err, testFolder) => 
             assert.true(JSON.stringify(expectedFiles) === JSON.stringify(actualFiles), 'Subscribed DSU should have the same files');
             assert.true(actualFiles.indexOf('level1/level2/level2-file-in-batch-mode.txt') !== -1, "Level2 file exists")
             assert.true(actualFiles.indexOf('level1/level1-file-in-batch-mode.txt') !== -1, "Level1 file exists")
-            assert.true(actualFiles.indexOf('level0-file-in-batch-mode.txt') !== -0, "Level0 file exists")
+            assert.true(actualFiles.indexOf('level0-file-in-batch-mode.txt') !== -1, "Level0 file exists")
 
         }
 

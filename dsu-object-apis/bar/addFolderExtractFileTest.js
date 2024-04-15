@@ -48,7 +48,7 @@ let addFolderExtractFilesTest = {
             if (err) {
                 throw err;
             }
-            this.bar.addFolder(folderPath, "fld", async (err, mapDigest) => {
+            this.bar.addFolder(folderPath, "fld", async (err) => {
                 if (err) {
                     throw err;
                 }

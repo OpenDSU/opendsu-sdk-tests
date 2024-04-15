@@ -45,7 +45,7 @@ assert.callback("Create and load DSU test", (callback) => {
 
                                 assert.true(keySSI === cloneKeySSI);
 
-                                loadedDSU.readFile("/a.txt", (err, data) => {
+                                loadedDSU.readFile("/a.txt", (err) => {
                                     if (err) {
                                         throw err;
                                     }

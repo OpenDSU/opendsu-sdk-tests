@@ -12,7 +12,7 @@ double_check.createTestFolder("bar_test_folder", (err, testFolder) => {
     const fileData = "Lorem Ipsum is simply dummy text";
 
     assert.callback("BasicBarFunctionality", (callback) => {
-        tir.launchVirtualMQNode(10, testFolder, (err, port) => {
+        tir.launchVirtualMQNode(10, testFolder, (err) => {
             assert.true(err === null || typeof err === "undefined", "Failed to create server");
 
             const openDSU = require("opendsu");
@@ -28,7 +28,7 @@ double_check.createTestFolder("bar_test_folder", (err, testFolder) => {
                     if (err) {
                         throw err;
                     }
-                    bar.writeFile("a.txt", fileData, async (err, brickMapDigest) => {
+                    bar.writeFile("a.txt", fileData, async (err) => {
                         if (err) {
                             throw err;
                         }

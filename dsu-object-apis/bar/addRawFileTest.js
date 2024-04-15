@@ -5,7 +5,6 @@ const assert = double_check.assert;
 
 let folderPath;
 let filePath;
-let extractionPath;
 
 let files;
 
@@ -49,12 +48,12 @@ let addRawFileTest = {
                     throw err;
                 }
 
-                this.addFile(filePath, "fld/a.txt", (err, initialHash) => {
+                this.addFile(filePath, "fld/a.txt", (err) => {
                     if (err) {
                         throw err;
                     }
 
-                    this.addFile(filePath, "fld/b.txt", (err, controlHash) => {
+                    this.addFile(filePath, "fld/b.txt", (err) => {
                         if (err) {
                             throw err;
                         }
@@ -81,7 +80,6 @@ double_check.createTestFolder("bar_test_folder", (err, testFolder) => {
     folderPath = path.join(testFolder, "fld");
     files = ["fld/a.txt", "fld/b.txt", "fld/c.txt"].map(file => path.join(testFolder, file));
     filePath = path.join(testFolder, "fld/a.txt");
-    extractionPath = path.join(testFolder, "test.txt");
     assert.callback("Add raw file to bar test", (callback) => {
         addRawFileTest.start(callback);
     }, 3000);

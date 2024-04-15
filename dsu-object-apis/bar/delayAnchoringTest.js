@@ -12,7 +12,7 @@ double_check.createTestFolder("delay_anchoring_test_folder", (err, testFolder) =
     const fileData = "Lorem Ipsum is simply dummy text";
 
     assert.callback("DelayAnchoringTest", (callback) => {
-        tir.launchVirtualMQNode(10, testFolder, (err, port) => {
+        tir.launchVirtualMQNode(10, testFolder, (err) => {
             assert.true(err === null || typeof err === "undefined", "Failed to create server");
 
             const openDSU = require("opendsu");
@@ -21,7 +21,7 @@ double_check.createTestFolder("delay_anchoring_test_folder", (err, testFolder) =
 
             const options = {
                 anchoringOptions: {
-                    anchoringEventListener: (err, result) => {
+                    anchoringEventListener: (err) => {
                         callback(err);
                     },
                     delay: 500
@@ -33,28 +33,11 @@ double_check.createTestFolder("delay_anchoring_test_folder", (err, testFolder) =
                     throw err;
                 }
 
-                bar.writeFile("a.txt", fileData, (err, brickMapDigest) => {
+                bar.writeFile("a.txt", fileData, (err) => {
                     if (err) {
                         throw err;
                     }
                     assert.true(err === null || typeof err === "undefined", "Failed to write file in BAR");
-
-                    //bar.getKeySSIAsString((err, keySSI) => {
-                        //if (err) {
-                            //throw err;
-                        //}
-                        //resolver.loadDSU(keySSI, (err, newBar) => {
-                            //if (err) {
-                                //throw err;
-                            //}
-                            //newBar.readFile("a.txt", (err, data) => {
-                                //assert.true(err === null || typeof err === "undefined", "Failed read file from BAR.");
-                                //assert.true(fileData === data.toString(), "Invalid read data");
-
-                                //callback();
-                            //});
-                        //})
-                    //})
                 });
             })
         });

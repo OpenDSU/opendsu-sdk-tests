@@ -26,7 +26,6 @@ assert.callback("Create and load DSU test", (finishTest) => {
                 throw err;
             }
             const openDSU = require("opendsu");
-            const EnclaveAPI = openDSU.loadApi("enclave");
             const anchoring = openDSU.loadApi("anchoring");
             const sc = openDSU.loadApi("sc");
             const anchoringX = anchoring.getAnchoringX();

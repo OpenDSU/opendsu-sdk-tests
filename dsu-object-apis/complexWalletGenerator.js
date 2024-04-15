@@ -10,7 +10,7 @@ const indexData = "Hello World!";
 assert.callback("Wallet generator", (testFinishCallback) => {
     dc.createTestFolder("wallet", function (err, folder) {
         const no_retries = 10;
-        tir.launchVirtualMQNode(no_retries, folder, function (err, port) {
+        tir.launchVirtualMQNode(no_retries, folder, function (err) {
             if (err) {
                 throw err;
             }
@@ -74,7 +74,7 @@ function generateWallet(webappFolder, callback) {
 
                                 wallet.readFile("/app/assets/js/index.js", function (err, content) {
                                     if (err) {
-                                        throw  err;
+                                        throw err;
                                     }
 
                                     assert.true(content.toString() === assetsIndexData);

@@ -10,6 +10,7 @@ const double_check = require("double-check");
 const assert = double_check.assert;
 const constants = require("opendsu").constants;
 $$.LEGACY_BEHAVIOUR_ENABLED = true;
+
 function getBrickStorageFolder(folder) {
     return path.join(folder, "external-volume/domains/default/brick-storage");
 }
@@ -21,7 +22,7 @@ function getBrickFilePath(folder, hashLink) {
     return targetPath;
 }
 
-function createDSU(enclave, callback){
+function createDSU(enclave, callback) {
     enclave.createTemplateSeedSSI("default", (err, templateSeed) => {
         if (err) {
             throw err;
@@ -60,7 +61,10 @@ assert.callback("Create and load Const DSU test", (finishTest) => {
                     if (err) {
                         throw err;
                     }
-                    enclave.createDSU(arraySSI, {useSSIAsIdentifier: true, dsuType: constants.DSUTypes.LEGACY_DSU}, (err, constDSU) => {
+                    enclave.createDSU(arraySSI, {
+                        useSSIAsIdentifier: true,
+                        dsuType: constants.DSUTypes.LEGACY_DSU
+                    }, (err, constDSU) => {
                         if (err) {
                             throw err;
                         }
@@ -69,13 +73,13 @@ assert.callback("Create and load Const DSU test", (finishTest) => {
                                 throw err;
                             }
 
-                            createDSU(enclave, (err, {seed})=>{
+                            createDSU(enclave, (err, {seed}) => {
                                 if (err) {
                                     throw err;
                                 }
 
-                                constDSU.mount("/code", seed, (err)=>{
-                                    if(err){
+                                constDSU.mount("/code", seed, (err) => {
+                                    if (err) {
                                         throw err;
                                     }
 
@@ -97,15 +101,18 @@ assert.callback("Create and load Const DSU test", (finishTest) => {
 
                                             dsu.restored = true;
 
-                                            dsu.mount("/code", seed, (err)=> {
-                                                if(err){
+                                            dsu.mount("/code", seed, (err) => {
+                                                if (err) {
                                                     throw err;
                                                 }
                                                 return callback(undefined, dsu);
                                             });
                                         };
 
-                                        enclave.loadDSURecoveryMode(arraySSI, {contentRecoveryFnc:recoveryContentFnc, dsuType: constants.DSUTypes.LEGACY_DSU}, (err, recoveredDSU) => {
+                                        enclave.loadDSURecoveryMode(arraySSI, {
+                                            contentRecoveryFnc: recoveryContentFnc,
+                                            dsuType: constants.DSUTypes.LEGACY_DSU
+                                        }, (err, recoveredDSU) => {
                                             if (err) {
                                                 throw err;
                                             }
@@ -125,17 +132,20 @@ assert.callback("Create and load Const DSU test", (finishTest) => {
                                                     assert.true(files.indexOf(expectedFiles[i]) !== -1, "Recovery failed");
                                                 }
 
-                                                resolver.invalidateDSUCache(arraySSI, (err)=>{
-                                                    if(err){
+                                                resolver.invalidateDSUCache(arraySSI, (err) => {
+                                                    if (err) {
                                                         throw err;
                                                     }
-                                                    resolver.loadDSU(arraySSI, {skipCache: true, dsuType: constants.DSUTypes.LEGACY_DSU}, (err, newRef)=>{
-                                                        if(err){
+                                                    resolver.loadDSU(arraySSI, {
+                                                        skipCache: true,
+                                                        dsuType: constants.DSUTypes.LEGACY_DSU
+                                                    }, (err, newRef) => {
+                                                        if (err) {
                                                             throw err;
                                                         }
 
-                                                        newRef.listFiles("/", (err, files)=>{
-                                                            if(err){
+                                                        newRef.listFiles("/", (err, files) => {
+                                                            if (err) {
                                                                 throw err;
                                                             }
 

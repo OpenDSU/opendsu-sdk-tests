@@ -35,7 +35,7 @@ let readFileFromStreamTest = {
             const buf = Buffer.alloc(1024 * 1024);
             expectedCrc = crc32.unsigned(buf);
             await this.bar.safeBeginBatchAsync();
-            this.bar.writeFile(barPath, buf, async (err, data) => {
+            this.bar.writeFile(barPath, buf, async (err) => {
                 assert.true(err === null || typeof err === "undefined", "Failed to write file.");
 
                 await this.bar.commitBatchAsync();
@@ -77,8 +77,7 @@ let readFileFromStreamTest = {
 
     }
 };
-
-double_check.createTestFolder("bar_test_folder", (err, testFolder) => {
+double_check.createTestFolder("bar_test_folder", () => {
     assert.callback("Read file from stream test", (callback) => {
         readFileFromStreamTest.start(callback);
     }, 3000);

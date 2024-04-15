@@ -36,7 +36,7 @@ let writeFileFromStreamTest = {
             this.bar = bar;
             const fileStream = fs.createReadStream(filePath);
             await bar.safeBeginBatchAsync();
-            this.bar.writeFile(barPath, fileStream, async (err, data) => {
+            this.bar.writeFile(barPath, fileStream, async (err) => {
                 assert.true(err === null || typeof err === "undefined", "Failed to write file.");
                 await this.bar.commitBatchAsync();
                 this.bar.getKeySSIAsString((err, keySSI) => {

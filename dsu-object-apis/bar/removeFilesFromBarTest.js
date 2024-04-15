@@ -49,7 +49,7 @@ let removeFilesFromBarTest = {
             if (err) {
                 throw err;
             }
-            this.archive.addFolder(folderPath, "/", (err, mapDigest) => {
+            this.archive.addFolder(folderPath, "/", (err) => {
                 if (err) {
                     throw err;
                 }

@@ -1,6 +1,5 @@
 require('../../../builds/output/testsRuntime');
 
-const fs = require('fs');
 const double_check = require("double-check");
 const assert = double_check.assert;
 const crc32 = require('buffer-crc32');
@@ -35,7 +34,7 @@ let writeFileFromBufferTest = {
             const buf = Buffer.alloc(1024 * 1024);
             expectedCrc = crc32.unsigned(buf);
             await bar.safeBeginBatchAsync();
-            bar.writeFile(barPath, buf, async (err, data) => {
+            bar.writeFile(barPath, buf, async (err) => {
                 assert.true(err === null || typeof err === "undefined", "Failed to write file.");
                 await bar.commitBatchAsync();
                 bar.getKeySSIAsString((err, keySSI) => {
@@ -67,7 +66,7 @@ let writeFileFromBufferTest = {
     }
 };
 
-double_check.createTestFolder("bar_test_folder", (err, testFolder) => {
+double_check.createTestFolder("bar_test_folder", () => {
     assert.callback("Write file from buffer test", (callback) => {
         writeFileFromBufferTest.start(callback);
     }, 3000);

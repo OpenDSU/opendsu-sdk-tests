@@ -14,7 +14,7 @@ double_check.createTestFolder("bar_test_folder", (err, testFolder) => {
     const expectedFileData = `${fileData}${dataToAppend}`;
 
     assert.callback("AppendToFileTest", (callback) => {
-        tir.launchVirtualMQNode(10, testFolder, (err, port) => {
+        tir.launchVirtualMQNode(10, testFolder, (err) => {
             assert.true(err === null || typeof err === "undefined", "Failed to create server");
 
             const openDSU = require("opendsu");
@@ -31,7 +31,7 @@ double_check.createTestFolder("bar_test_folder", (err, testFolder) => {
                         throw err;
                     }
 
-                    bar.writeFile("a.txt", fileData, (err, brickMapDigest) => {
+                    bar.writeFile("a.txt", fileData, (err) => {
                         if (err) {
                             throw err;
                         }

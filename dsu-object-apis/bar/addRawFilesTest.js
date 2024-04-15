@@ -4,8 +4,6 @@ const double_check = require("double-check");
 const assert = double_check.assert;
 
 let folderPath;
-let filePath;
-
 let files;
 
 const tir = require("../../../psknode/tests/util/tir.js");
@@ -46,7 +44,7 @@ let addRawFilesTest = {
                 if (err) {
                     throw err;
                 }
-                this.bar.addFiles(files, 'filesFolder', (err, result) => {
+                this.bar.addFiles(files, 'filesFolder', (err) => {
                     if (err) {
                         throw err;
                     }
@@ -79,7 +77,6 @@ double_check.createTestFolder("bar_test_folder", (err, testFolder) => {
     const path = require("path");
     folderPath = path.join(testFolder, "fld");
     files = ["fld/a.txt", "fld/b.txt", "fld/c.txt"].map(file => path.join(testFolder, file));
-    filePath = path.join(testFolder, "test.txt");
     assert.callback("Add raw files to bar test", (callback) => {
         addRawFilesTest.start(callback);
     }, 3000);

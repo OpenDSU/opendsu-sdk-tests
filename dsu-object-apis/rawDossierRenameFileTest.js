@@ -31,7 +31,7 @@ assert.callback("Rename file in dossier", (testFinishCallback) => {
                         }
 
                         await dossier.commitBatchAsync();
-                        dossier.readFile('/folder/renamed_file', async (err, data) => {
+                        dossier.readFile('/folder/renamed_file', async (err) => {
                             if (err) {
                                 throw err;
                             }

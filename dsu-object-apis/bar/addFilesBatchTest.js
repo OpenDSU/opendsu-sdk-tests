@@ -4,13 +4,10 @@ const double_check = require("double-check");
 const assert = double_check.assert;
 
 let folderPath;
-let filePath;
 
 let files;
 
 const tir = require("../../../psknode/tests/util/tir.js");
-
-
 const text = ["first", "second", "third"];
 
 $$.LEGACY_BEHAVIOUR_ENABLED = true;
@@ -45,7 +42,7 @@ let addFilesBatchTest = {
 
             this.bar = bar;
             await this.bar.safeBeginBatchAsync();
-            this.bar.addFiles(files, 'filesFolder', {embedded: true}, async (err, result) => {
+            this.bar.addFiles(files, 'filesFolder', {embedded: true}, async (err) => {
                 if (err) {
                     throw err;
                 }
@@ -88,7 +85,6 @@ double_check.createTestFolder("bar_test_folder", (err, testFolder) => {
     const path = require("path");
     folderPath = path.join(testFolder, "fld");
     files = ["fld/a.txt", "fld/b.txt", "fld/c.txt"].map(file => path.join(testFolder, file));
-    filePath = path.join(testFolder, "test.txt");
     assert.callback("Add files (embedded: true) to bar test", (callback) => {
         addFilesBatchTest.start(callback);
     }, 3000000);

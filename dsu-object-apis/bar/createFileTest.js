@@ -39,30 +39,30 @@ let createEmptyFileTest = {
     },
 
     writeFiles: function (dsu, callback) {
-            dsu.writeFile("/fld/somePath", (err, result) => {
+        dsu.writeFile("/fld/somePath", (err) => {
+            if (err) {
+                throw err;
+            }
+            console.log("created file /fld/somePath")
+            console.log("Started creating file /fld/somePath1");
+            dsu.writeFile("/fld/somePath1", (err) => {
                 if (err) {
-                    throw err;
+                    return callback(err);
                 }
-                console.log("created file /fld/somePath")
-                console.log("Started creating file /fld/somePath1");
-                dsu.writeFile("/fld/somePath1", (err, result) => {
-                    if (err) {
-                        return callback(err);
-                    }
 
-                    // console.log("created file /fld/somePath1")
-                    callback();
-                })
+                // console.log("created file /fld/somePath1")
+                callback();
             })
+        })
     },
 
     deleteFiles(dsu) {
-        dsu.delete("/fld/somePath", (err, result) => {
+        dsu.delete("/fld/somePath", (err) => {
             if (err) {
                 throw err;
             }
             console.log("deleted file /fld/somePath")
-            dsu.delete("/fld/somePath1", (err, result) => {
+            dsu.delete("/fld/somePath1", (err) => {
                 if (err) {
                     throw err;
                 }
@@ -79,7 +79,7 @@ let createEmptyFileTest = {
                 if (err) {
                     console.log(err);
                 }
-                resolver.loadDSU(keySSI, (err, copyDSU) => {
+                resolver.loadDSU(keySSI, (err) => {
                     if (err) {
                         console.log(err);
                     }
@@ -104,7 +104,7 @@ let createEmptyFileTest = {
     }
 };
 
-double_check.createTestFolder("bar_test_folder", (err, testFolder) => {
+double_check.createTestFolder("bar_test_folder", () => {
     assert.callback("Create empty file test", (callback) => {
         createEmptyFileTest.start(callback);
     }, 3000);

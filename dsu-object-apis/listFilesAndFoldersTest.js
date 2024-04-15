@@ -77,7 +77,7 @@ let listFilesAndFoldersTest = {
     }
 };
 
-double_check.createTestFolder("bar_test_folder", (err, testFolder) => {
+double_check.createTestFolder("bar_test_folder", () => {
 
     assert.callback("List files and folders from RawDossier test", (callback) => {
             listFilesAndFoldersTest.start(callback);

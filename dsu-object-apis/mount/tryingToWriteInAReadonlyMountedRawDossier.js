@@ -22,7 +22,7 @@ assert.callback("Trying to write in a readonly mounted RawDossier", (testFinishC
                 }
 
                 await ref.safeBeginBatchAsync();
-                ref.writeFile(fileName, "withcontent",async (err) => {
+                ref.writeFile(fileName, "withcontent", async (err) => {
                     if (err) {
                         throw err;
                     }

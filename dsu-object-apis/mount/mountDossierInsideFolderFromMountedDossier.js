@@ -44,12 +44,12 @@ assert.callback("mount - mount dossier inside a folder of a mounted dossier", (t
                                 }
 
                                 await rawDossier.commitBatchAsync();
-                                rawDossier.listMountedDossiers('', (err, content) => {
+                                rawDossier.listMountedDossiers('', (err) => {
                                     if (err) {
                                         throw err;
                                     }
 
-                                    rawDossier.listMountedDossiers('/folder1', (err, content) => {
+                                    rawDossier.listMountedDossiers('/folder1', (err) => {
                                         if (err) {
                                             throw err;
                                         }
