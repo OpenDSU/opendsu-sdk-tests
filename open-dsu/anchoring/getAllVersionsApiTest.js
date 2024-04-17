@@ -11,15 +11,9 @@ async function getNextVersion(keySSI) {
     keySSI = keySSISpace.parse(keySSI);
     let nextVersion = 0;
     let anchorId = await $$.promisify(keySSI.getAnchorId)();
-    try {
-        let versions = await $$.promisify(anchoringX.getAllVersions)(anchorId);
-        if (versions) {
-            nextVersion = versions.length;
-        } else {
-            //if !versions we know that is our first version
-        }
-    } catch (err) {
-        throw err;
+    let versions = await $$.promisify(anchoringX.getAllVersions)(anchorId);
+    if (versions) {
+        nextVersion = versions.length;
     }
 
     return nextVersion;
